@@ -1,0 +1,38 @@
+{
+  "name": "node-ts-seed",
+  "version": "1.0.0",
+  "description": "Typescript backend seed.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib && tsc",
+    "test": "npm run lint && npm run test:unit && npm run test:integration",
+    "test:unit": "mocha --opts test/unit/mocha.opts -r ts-node/register 'test/unit/**/*.test.ts'",
+    "test:integration": "mocha --exit --opts test/integration/mocha.opts -r ts-node/register 'test/integration/**/*.test.ts'",
+    "cover": "nyc report --reporter=text-lcov | coveralls",
+    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'"
+  },
+  "author": "4All Tecnologia EPP",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/4alltecnologia/node-ts-seed"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.7",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.2",
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^12.0.2",
+    "eslint-plugin-import": "^2.17.2",
+    "mocha": "^5.2.0",
+    "nock": "^10.0.6",
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.18.0",
+    "tslint-config-airbnb": "^5.11.1",
+    "typescript": "^3.5.2"
+  }
+}

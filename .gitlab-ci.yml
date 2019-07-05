@@ -1,0 +1,8 @@
+image: alpine:latest
+variables:
+  IMAGE_REPOSITORY: "${AWS_IMAGE_REPOSITORY}:${CI_COMMIT_REF_NAME}-${CI_PIPELINE_IID}"
+stages:
+  - test
+include:
+  - local: '/scripts/test.yml'
+
