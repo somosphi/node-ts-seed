@@ -1,4 +1,4 @@
-const env = require('./src/env');
+const env = require('./lib/env');
 
 /**
  * @type {import('knex').Config}

@@ -21,7 +21,8 @@
   "dependencies": {
     "axios": "^0.19.0",
     "dotenv": "^8.0.0",
-    "knex": "^0.18.3"
+    "knex": "^0.18.3",
+    "mysql2": "^1.6.5"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
