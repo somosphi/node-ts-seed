@@ -1,4 +1,4 @@
-const env = require('./lib/env');
+require('dotenv').config();
 
 /**
  * @type {import('knex').Config}
@@ -6,10 +6,10 @@ const env = require('./lib/env');
 module.exports = {
   client: 'mysql2',
   connection: {
-    host: env.DB_HOST,
-    user: env.DB_USERNAME,
-    password: env.DB_PASSWORD,
-    database: env.DB_DATABASE,
+    host: process.env.DB_HOST,
+    user: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_DATABASE,
     typeCast: (field, next) => {
       switch (field.type) {
         case 'TINY': {
@@ -21,8 +21,8 @@ module.exports = {
     bigNumberStrings: true,
   },
   pool: {
-    min: env.DB_POOL_MIN,
-    max: env.DB_POOL_MAX,
+    min: process.env.DB_POOL_MIN && parseInt(process.env.DB_POOL_MIN, 10),
+    max: process.env.DB_POOL_MAX && parseInt(process.env.DB_POOL_MAX, 10),
   },
   migrations: {
     tableName: 'migrations',

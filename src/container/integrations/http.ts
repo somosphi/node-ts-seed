@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
 
-export class HttpIntegration {
+export abstract class HttpIntegration {
   protected instance: AxiosInstance;
 
   constructor(options: AxiosRequestConfig) {

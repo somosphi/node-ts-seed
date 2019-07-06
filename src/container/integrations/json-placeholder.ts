@@ -1,13 +1,13 @@
-import { HttpIntegration } from "./http";
+import { HttpIntegration } from './http';
 
 export interface JsonPlaceholderConfig {
-  baseURL: string;  
+  baseURL: string;
 }
 
 export interface JsonPlaceholderUser {
   id: number;
   name: string;
-  username: string
+  username: string;
   email: string;
   address: string;
   street: string;
@@ -15,28 +15,28 @@ export interface JsonPlaceholderUser {
   city: string;
   zipcode: string;
   geo: {
-    lat: string,
-    lng: string
-  }
+    lat: string;
+    lng: string;
+  };
   phone: string;
-  website:string;
+  website: string;
   company: {
-    name: string,
-    catchPhrase: string
-    bs: string
-  }  
+    name: string;
+    catchPhrase: string;
+    bs: string;
+  };
 }
 
-export class JsonPlaceholderIntegration extends HttpIntegration{
+export class JsonPlaceholderIntegration extends HttpIntegration {
 
   constructor(options: JsonPlaceholderConfig) {
     super({
-      baseURL: options.baseURL
+      baseURL: options.baseURL,
     });
   }
 
   async getUsers(): Promise<JsonPlaceholderUser[]>  {
     const response = await this.instance.get<JsonPlaceholderUser[]>('/users');
     return response.data;
-  }  
+  }
 }
