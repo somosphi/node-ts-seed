@@ -10,12 +10,14 @@ dotenv.config();
 
 const knexfile = require('../knexfile');
 
-elasticApmNode.start({
-  serviceName: process.env.APM_SERVICE_NAME,
-  serverUrl: process.env.APM_SERVER_URL,
-});
+if (process.env.APM_SERVICE_NAME && process.env.APM_SERVER_URL) {
+  elasticApmNode.start({
+    serviceName: process.env.APM_SERVICE_NAME,
+    serverUrl: process.env.APM_SERVER_URL,
+  });
 
-logger.info(`Registered service "${process.env.APM_SERVICE_NAME}" in APM Server`);
+  logger.info(`Registered service "${process.env.APM_SERVICE_NAME}" in APM Server`);
+}
 
 const mysqlDatabase = knex(knexfile);
 
