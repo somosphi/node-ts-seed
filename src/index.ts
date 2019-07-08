@@ -11,7 +11,7 @@ dotenv.config();
 const knexfile = require('../knexfile');
 
 elasticApmNode.start({
-  serviceName: process.env.APM_SERVICE_NAME, // use package.json
+  serviceName: process.env.APM_SERVICE_NAME,
   serverUrl: process.env.APM_SERVER_URL,
 });
 
