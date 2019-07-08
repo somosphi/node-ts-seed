@@ -10,26 +10,34 @@ dotenv.config();
 
 const knexfile = require('../knexfile');
 
-if (process.env.APM_SERVICE_NAME && process.env.APM_SERVER_URL) {
+const {
+  APM_SERVICE_NAME,
+  APM_SERVER_URL,
+  HTTP_PORT,
+  HTTP_BODY_LIMIT,
+  JSON_PLACEHOLDER_URL,
+} = process.env;
+
+if (APM_SERVICE_NAME && APM_SERVER_URL) {
   elasticApmNode.start({
-    serviceName: process.env.APM_SERVICE_NAME,
-    serverUrl: process.env.APM_SERVER_URL,
+    serviceName: APM_SERVICE_NAME,
+    serverUrl: APM_SERVER_URL,
   });
 
-  logger.info(`Registered service "${process.env.APM_SERVICE_NAME}" in APM Server`);
+  logger.info(`Registered service "${APM_SERVICE_NAME}" in APM Server`);
 }
 
 const mysqlDatabase = knex(knexfile);
 
 const container = new Container(mysqlDatabase, {
   jsonPlaceholderConfig: {
-    baseURL: process.env.JSON_PLACEHOLDER_URL || '',
+    baseURL: JSON_PLACEHOLDER_URL || '',
   },
 });
 
 export const httpServer = new HttpServer(container, {
-  port: (process.env.HTTP_PORT && parseInt(process.env.HTTP_PORT, 10)) || 3000,
-  bodyLimit: process.env.HTTP_BODY_LIMIT || '10kb',
+  port: (HTTP_PORT && parseInt(HTTP_PORT, 10)) || 3000,
+  bodyLimit: HTTP_BODY_LIMIT || '10kb',
 });
 
 export const worker = new Worker(container);
