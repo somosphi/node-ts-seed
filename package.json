@@ -34,6 +34,7 @@
     "moment-timezone": "^0.5.25",
     "mysql2": "^1.6.5",
     "ramda": "^0.26.1",
+    "supertest": "^4.0.2",
     "winston": "^3.2.1"
   },
   "devDependencies": {
@@ -54,6 +55,7 @@
     "@types/nock": "^10.0.3",
     "@types/ramda": "^0.26.15",
     "@types/sinon": "^7.0.13",
+    "@types/supertest": "^2.0.8",
     "@types/winston": "^2.4.4",
     "chai": "^4.2.0",
     "coveralls": "^3.0.2",

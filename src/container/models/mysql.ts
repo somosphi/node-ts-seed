@@ -20,8 +20,8 @@ export abstract class MySQLModel<T> {
   }
 
   async create(data: Object, trx?: Transaction): Promise<string> {
-    const result = await this.transactionable(trx).insert(data);
-    return result[0].toString();
+    const [createdId] = await this.transactionable(trx).insert(data);
+    return createdId.toString();
   }
 
   async all(trx?: Transaction): Promise<T[]> {

@@ -5,7 +5,9 @@ import { UserSources } from '../../enums';
 export interface User {
   id: string;
   name: string;
+  username: string;
   emailAddress: string;
+  source: UserSources;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -22,12 +24,5 @@ export class UserModel extends MySQLModel<User> {
     return await this.transactionable(trx)
       .whereIn('emailAddress', emails)
       .where('source', source);
-  }
-
-  
-
-  async removeByEmailAddresses(emailAddresses: string[], trx?: Transaction): Promise<void> {
-    const query = this.transactionable(trx);
-    await query.whereIn('emailAddress', emailAddresses).delete();
   }
 }

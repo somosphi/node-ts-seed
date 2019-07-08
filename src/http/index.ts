@@ -28,6 +28,13 @@ export class HttpServer {
     return this.config.port;
   }
 
+  getApp(): express.Application {
+    if (!this.app) {
+      throw new Error('Http server not started');
+    }
+    return this.app;
+  }
+
   protected loadControllers(): Controller[] {
     return [
       new UserController(this.container),

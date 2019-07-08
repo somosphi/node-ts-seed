@@ -1,8 +1,8 @@
-import { nock, expect } from "../../helpers";
-import { JsonPlaceholderIntegration } from '../../../../src/container/integrations/json-placeholder';
+import { nock, expect } from '../../helpers';
+import { JsonPlaceholderIntegration }
+  from '../../../../src/container/integrations/json-placeholder';
 
 describe('JsonPlaceholderIntegration', () => {
-
   const baseURL = 'http://localhost:1500/jsonplaceholder';
   const nockInstance = nock(baseURL);
   const jsonPlaceholderInstance = new JsonPlaceholderIntegration({ baseURL });
@@ -13,8 +13,8 @@ describe('JsonPlaceholderIntegration', () => {
         {
           id: 1,
           name: 'fuluna',
-          email: 'fuluna@aah.com'
-        }
+          email: 'fuluna@aah.com',
+        },
       ];
 
       nockInstance

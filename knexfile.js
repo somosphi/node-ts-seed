@@ -12,6 +12,8 @@ module.exports = {
     database: process.env.DB_DATABASE,
     typeCast: (field, next) => {
       switch (field.type) {
+        case 'LONGLONG':
+          return field.string();
         case 'TINY': {
           return field.string() === '1';
         }
