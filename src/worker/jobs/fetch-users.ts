@@ -7,13 +7,13 @@ export class FetchUsersJob extends Cron {
   protected userService: UserService;
 
   constructor(container: Container) {
-    super('*/30 * * * * *');
+    super('*/60 * * * * *');
     this.userService = container.userService;
   }
 
   protected async handler(): Promise<void> {
-    await this.userService.fetchFromJsonPlaceholder();
-    logger.info('Fetched from json placeholder api');
+    const fetchedUsers = await this.userService.fetchFromJsonPlaceholder();
+    logger.info(`Fetched ${fetchedUsers.length} users from json placeholder api`);
   }
 
   protected async errorHandler(err: Error): Promise<void> {

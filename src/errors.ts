@@ -1,6 +1,6 @@
 import joi from 'joi';
 
-export class CodedError extends Error {
+export abstract class CodedError extends Error {
   code: string;
 
   constructor(code: string, message: string) {
@@ -16,7 +16,7 @@ export class CodedError extends Error {
   }
 }
 
-export class DetailedCodedError extends CodedError {
+export abstract class DetailedCodedError extends CodedError {
   details: Object;
 
   constructor(code: string, message: string, details: Object) {

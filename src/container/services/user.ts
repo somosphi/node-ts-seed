@@ -29,9 +29,10 @@ export class UserService {
     return user;
   }
 
-  async fetchFromJsonPlaceholder(): Promise<void> {
+  async fetchFromJsonPlaceholder(): Promise<string[]> {
     const jsonPlaceholderUsers = await this.jsonPlaceholderIntegration.getUsers();
     const jsonPlaceholderEmails = R.pluck('email', jsonPlaceholderUsers);
+    const fetchedIds: string[] = [];
 
     await this.mysqlDatabase.transaction(async (trx) => {
       const sourceDatabaseUsers = await this.userModel
@@ -51,10 +52,12 @@ export class UserService {
               emailAddress: jsonPlaceholderEmail,
               source: UserSources.JsonPlaceholder,
             };
-            await this.userModel.create(createData, trx);
+            fetchedIds.push(await this.userModel.create(createData, trx));
           }
         }),
       );
     });
+
+    return fetchedIds;
   }
 }
