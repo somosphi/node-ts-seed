@@ -10,7 +10,7 @@ export abstract class MySQLModel<T> {
 
   protected transactionable(trx?: Transaction): QueryBuilder {
     if (trx) {
-      this.table.transacting(trx);
+      return this.table.transacting(trx);
     }
     return this.table;
   }
@@ -20,30 +20,25 @@ export abstract class MySQLModel<T> {
   }
 
   async create(data: Object, trx?: Transaction): Promise<string> {
-    const query = this.transactionable(trx);
-    const result = await query.insert(data);
+    const result = await this.transactionable(trx).insert(data);
     return result[0].toString();
   }
 
   async all(trx?: Transaction): Promise<T[]> {
-    const query = this.transactionable(trx);
-    return await query;
+    return await this.transactionable(trx);
   }
 
   async getById(id: string, trx?: Transaction): Promise<T|null> {
-    const query = this.transactionable(trx);
-    return await query.where('id', id).first();
+    return await this.transactionable(trx).where('id', id).first();
   }
 
   async deleteById(id: string, trx?: Transaction): Promise<boolean> {
-    const query = this.transactionable(trx);
-    const result = await query.where('id', id).delete();
+    const result = await this.transactionable(trx).where('id', id).delete();
     return result > 0;
   }
 
   async updateById(id: string, data: Object, trx?: Transaction): Promise<boolean> {
-    const query = this.transactionable(trx);
-    const result = await query.where('id', id).update(data);
+    const result = await this.transactionable(trx).where('id', id).update(data);
     return result > 0;
   }
 }

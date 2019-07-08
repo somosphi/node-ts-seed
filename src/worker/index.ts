@@ -16,6 +16,10 @@ export class Worker {
     ];
   }
 
+  get jobsCount(): number {
+    return this.jobs.length;
+  }
+
   start(): void {
     this.jobs
       .filter(job => !job.running)

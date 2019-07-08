@@ -17,6 +17,7 @@ export class FetchUsersJob extends Cron {
   }
 
   protected async errorHandler(err: Error): Promise<void> {
-    logger.error('Failed to fetch from json placeholder api', err);
+    super.errorHandler(err);
+    logger.warn('Failed to fetch from json placeholder api');
   }
 }

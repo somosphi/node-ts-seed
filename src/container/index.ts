@@ -4,6 +4,7 @@ import { UserService } from './services/user';
 import { JsonPlaceholderIntegration, JsonPlaceholderConfig } from './integrations/json-placeholder';
 
 export interface ServiceContext {
+  mysqlDatabase: knex;
   userModel: UserModel;
   jsonPlaceholderIntegration: JsonPlaceholderIntegration;
 }
@@ -17,6 +18,7 @@ export class Container {
 
   constructor(mysqlDatabase: knex, config: ContainerConfig) {
     const serviceContext: ServiceContext = {
+      mysqlDatabase,
       userModel: new UserModel(mysqlDatabase),
       jsonPlaceholderIntegration: new JsonPlaceholderIntegration(config.jsonPlaceholderConfig),
     };
