@@ -10,16 +10,17 @@ export interface ServiceContext {
 }
 
 export interface ContainerConfig {
+  mysqlDatabase: knex;
   jsonPlaceholderConfig: JsonPlaceholderConfig;
 }
 
 export class Container {
   readonly userService: UserService;
 
-  constructor(mysqlDatabase: knex, config: ContainerConfig) {
+  constructor(config: ContainerConfig) {
     const serviceContext: ServiceContext = {
-      mysqlDatabase,
-      userModel: new UserModel(mysqlDatabase),
+      mysqlDatabase: config.mysqlDatabase,
+      userModel: new UserModel(config.mysqlDatabase),
       jsonPlaceholderIntegration: new JsonPlaceholderIntegration(config.jsonPlaceholderConfig),
     };
 

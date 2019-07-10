@@ -29,7 +29,8 @@ if (APM_SERVICE_NAME && APM_SERVER_URL) {
 
 const mysqlDatabase = knex(knexfile);
 
-const container = new Container(mysqlDatabase, {
+const container = new Container({
+  mysqlDatabase,
   jsonPlaceholderConfig: {
     baseURL: JSON_PLACEHOLDER_URL || '',
   },
