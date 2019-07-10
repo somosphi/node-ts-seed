@@ -2,7 +2,7 @@ import knex, { QueryBuilder, Transaction } from 'knex';
 
 export abstract class MySQLModel<T> {
   protected readonly database: knex;
-  protected abstract getTable(): string;
+  protected abstract getTableName(): string;
 
   constructor(database: knex) {
     this.database = database;
@@ -16,7 +16,7 @@ export abstract class MySQLModel<T> {
   }
 
   protected get table(): QueryBuilder {
-    return this.database(this.getTable());
+    return this.database(this.getTableName());
   }
 
   async create(data: Object, trx?: Transaction): Promise<string> {

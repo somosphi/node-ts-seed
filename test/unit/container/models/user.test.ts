@@ -4,11 +4,11 @@ import { UserSources } from '../../../../src/enums';
 
 describe('UserModel', () => {
 
-  describe('#getTable', () => {
+  describe('#getTableName', () => {
     it('should use table "users"', () => {
       // @ts-ignore
       const userModel = new UserModel();
-      expect(userModel.getTable()).to.be.eql('users');
+      expect(userModel.getTableName()).to.be.eql('users');
     });
   });
 

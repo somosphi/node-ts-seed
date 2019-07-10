@@ -9,7 +9,7 @@ class TestModel extends MySQLModel<any> {
     return super.table;
   }
 
-  getTable(): string {
+  getTableName(): string {
     return TestModel.tableName;
   }
 
@@ -20,11 +20,11 @@ class TestModel extends MySQLModel<any> {
 
 describe('MySQLModel', () => {
 
-  describe('#getTable', () => {
+  describe('#getTableName', () => {
     it('should return table name', () => {
       // @ts-ignore
       const testModel = new TestModel();
-      expect(testModel.getTable()).to.be.eql(TestModel.tableName);
+      expect(testModel.getTableName()).to.be.eql(TestModel.tableName);
     });
   });
 

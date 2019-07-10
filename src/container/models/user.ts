@@ -14,7 +14,7 @@ export interface User {
 
 export class UserModel extends MySQLModel<User> {
 
-  getTable(): string {
+  getTableName(): string {
     return 'users';
   }
 
