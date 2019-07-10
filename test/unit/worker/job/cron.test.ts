@@ -1,9 +1,9 @@
-import { Cron } from "../../../../src/worker/jobs/cron";
-import { assert, sinon } from "../../helpers";
+import { Cron } from '../../../../src/worker/jobs/cron';
+import { assert, sinon } from '../../helpers';
 
 class TestCron extends Cron {
   constructor() {
-    super('* * * * * *')
+    super('* * * * * *');
   }
 
   async handler(): Promise<void> {
@@ -26,22 +26,21 @@ describe('Cron', () => {
       const handlerFake = sinon.fake.resolves(undefined);
 
       const cron = new TestCron();
-      cron.handler = handlerFake
+      cron.handler = handlerFake;
 
-      await cron.execute()
-      assert(handlerFake.calledOnce)
+      await cron.execute();
+      assert(handlerFake.calledOnce);
     });
 
     it.only('shold call errorHandler', async () => {
       const error = new Error();
       const handlerFake = sinon.fake.rejects(error);
       const errorHandlerFake = sinon.fake.resolves(undefined);
-      
       const cron = new TestCron();
       cron.errorHandler = errorHandlerFake;
       cron.handler = handlerFake;
 
-      await cron.execute()
+      await cron.execute();
       assert(errorHandlerFake.calledOnceWith(error));
     });
   });
