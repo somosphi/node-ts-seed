@@ -1,4 +1,3 @@
-import * as R from 'ramda';
 import knex from 'knex';
 import { UserModel, User } from '../models/user';
 import { JsonPlaceholderIntegration } from '../integrations/json-placeholder';
@@ -31,7 +30,10 @@ export class UserService {
 
   async fetchFromJsonPlaceholder(): Promise<string[]> {
     const jsonPlaceholderUsers = await this.jsonPlaceholderIntegration.getUsers();
-    const jsonPlaceholderEmails = R.pluck('email', jsonPlaceholderUsers);
+
+    const jsonPlaceholderEmails = jsonPlaceholderUsers
+      .map(jsonPlaceholderUser => jsonPlaceholderUser.email);
+
     const fetchedIds: string[] = [];
 
     await this.mysqlDatabase.transaction(async (trx) => {
