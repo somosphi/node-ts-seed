@@ -9,13 +9,7 @@ export abstract class Cron extends CronJob implements WorkerJob {
   constructor(cronTime: string, timezone: string = 'Etc/UTC') {
     super(
       cronTime,
-      async () => {
-        try {
-          await this.handler();
-        } catch (err) {
-          this.errorHandler(err);
-        }
-      },
+      () => this.execute(),
       () => this.onComplete(),
       false,
       timezone,
@@ -27,7 +21,19 @@ export abstract class Cron extends CronJob implements WorkerJob {
     //
   }
 
-  protected errorHandler(err: Error): void {
+  protected async errorHandler(err: Error): Promise<void> {
     logger.error(err);
+  }
+
+  protected async execute(): Promise<void>  {
+    try {
+      await this.handler();
+    } catch (err) {
+      try {
+        await this.errorHandler(err);
+      } catch (error) {
+        logger.error(error);
+      }
+    }
   }
 }
