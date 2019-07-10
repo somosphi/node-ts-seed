@@ -22,7 +22,7 @@ class TestCron extends Cron {
 
 describe('Cron', () => {
   describe('#execute', () => {
-    it.only('shold call handler', async () => {
+    it('shold call handler', async () => {
       const handlerFake = sinon.fake.resolves(undefined);
 
       const cron = new TestCron();
@@ -32,7 +32,7 @@ describe('Cron', () => {
       assert(handlerFake.calledOnce);
     });
 
-    it.only('shold call errorHandler', async () => {
+    it('shold call errorHandler', async () => {
       const error = new Error();
       const handlerFake = sinon.fake.rejects(error);
       const errorHandlerFake = sinon.fake.resolves(undefined);
