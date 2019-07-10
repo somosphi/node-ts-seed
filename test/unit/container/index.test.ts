@@ -5,8 +5,8 @@ describe('Container', () => {
 
   describe('#constructor', () => {
     it('should contains public property "userService"', () => {
-      // @ts-ignore
-      const container = new Container({}, {
+      const container = new Container({
+        // @ts-ignore
         jsonPlaceholderConfig: {},
       });
       expect(container.userService).to.be.not.equal(null);

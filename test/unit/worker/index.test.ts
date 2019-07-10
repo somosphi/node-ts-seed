@@ -5,8 +5,8 @@ import { expect } from '../helpers';
 describe('Worker', () => {
   describe('#jobConunt', () => {
     it('return length by jobs', () => {
-      // @ts-ignore
-      const container = new Container({}, {
+      const container = new Container({
+        // @ts-ignore
         jsonPlaceholderConfig: {},
       });
 
@@ -20,8 +20,8 @@ describe('Worker', () => {
 
   describe('#start', () => {
     it('start jobs', () => {
-      // @ts-ignore
-      const container = new Container({}, {
+      const container = new Container({
+        // @ts-ignore
         jsonPlaceholderConfig: {},
       });
 
@@ -32,8 +32,8 @@ describe('Worker', () => {
 
   describe('#stop', () => {
     it('stop jobs', () => {
-      // @ts-ignore
-      const container = new Container({}, {
+      const container = new Container({
+        // @ts-ignore
         jsonPlaceholderConfig: {},
       });
 
