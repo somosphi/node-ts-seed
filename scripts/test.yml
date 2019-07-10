@@ -1,10 +1,6 @@
 test:
   stage: test
   image: payly/node-gitlab-ci:latest
-  services:
-    - name: redis:5-alpine
-      alias: redis-server
-      command: ["redis-server", "--appendonly", "yes"]
   script:
     - npm install
     - npm run lint
