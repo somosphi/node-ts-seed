@@ -1,5 +1,5 @@
 import { sinon, assert, expect } from './helpers';
-import * as errors from '../../src/errors';
+import * as errors from '../src/errors';
 
 describe('CodedError', () => {
 

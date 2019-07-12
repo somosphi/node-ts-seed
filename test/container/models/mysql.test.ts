@@ -1,6 +1,6 @@
 import { Transaction } from 'knex';
 import { assert, expect, sinon } from '../../helpers';
-import { MySQLModel } from '../../../../src/container/models/mysql';
+import { MySQLModel } from '../../../src/container/models/mysql';
 
 class TestModel extends MySQLModel<any> {
   static tableName: 'test';

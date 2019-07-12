@@ -1,4 +1,4 @@
-import { Container } from '../../../src/container';
+import { Container } from '../../src/container';
 import { expect } from '../helpers';
 
 describe('Container', () => {

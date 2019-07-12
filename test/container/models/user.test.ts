@@ -1,6 +1,6 @@
-import { UserModel, User } from '../../../../src/container/models/user';
+import { UserModel, User } from '../../../src/container/models/user';
 import { assert, expect, sinon } from '../../helpers';
-import { UserSources } from '../../../../src/enums';
+import { UserSources } from '../../../src/enums';
 
 describe('UserModel', () => {
 

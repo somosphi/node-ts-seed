@@ -1,4 +1,4 @@
-import { HttpIntegration } from '../../../../src/container/integrations/http';
+import { HttpIntegration } from '../../../src/container/integrations/http';
 import { expect } from '../../helpers';
 
 class TestHttpIntegration extends HttpIntegration {

@@ -6,12 +6,10 @@ import { ServiceContext } from '..';
 import { ResourceNotFoundError } from '../../errors';
 
 export class UserService {
-  protected readonly mysqlDatabase: knex;
   protected readonly userModel: UserModel;
   protected readonly jsonPlaceholderIntegration: JsonPlaceholderIntegration;
 
   constructor(context: ServiceContext) {
-    this.mysqlDatabase = context.mysqlDatabase;
     this.userModel = context.userModel;
     this.jsonPlaceholderIntegration = context.jsonPlaceholderIntegration;
   }
@@ -36,7 +34,7 @@ export class UserService {
 
     const fetchedIds: string[] = [];
 
-    await this.mysqlDatabase.transaction(async (trx) => {
+    await this.userModel.transaction(async (trx) => {
       const sourceDatabaseUsers = await this.userModel
         .getByEmailsWithSource(jsonPlaceholderEmails, UserSources.JsonPlaceholder, trx);
 

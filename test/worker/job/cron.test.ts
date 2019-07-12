@@ -1,4 +1,4 @@
-import { Cron } from '../../../../src/worker/jobs/cron';
+import { Cron } from '../../../src/worker/jobs/cron';
 import { assert, sinon } from '../../helpers';
 
 class TestCron extends Cron {

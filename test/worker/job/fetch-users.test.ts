@@ -1,6 +1,6 @@
-import { FetchUsersJob } from '../../../../src/worker/jobs/fetch-users';
+import { FetchUsersJob } from '../../../src/worker/jobs/fetch-users';
 import { sinon, assert } from '../../helpers';
-import { Cron } from '../../../../src/worker/jobs/cron';
+import { Cron } from '../../../src/worker/jobs/cron';
 
 class TestFetchUsersJob extends FetchUsersJob {
   async handler(): Promise<void> {
