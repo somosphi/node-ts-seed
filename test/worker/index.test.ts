@@ -1,5 +1,5 @@
-import { Worker } from '../../../src/worker';
-import { Container } from '../../../src/container';
+import { Worker } from '../../src/worker';
+import { Container } from '../../src/container';
 import { expect } from '../helpers';
 
 describe('Worker', () => {

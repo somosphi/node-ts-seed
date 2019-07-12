@@ -1,6 +1,6 @@
 import { nock, expect } from '../../helpers';
 import { JsonPlaceholderIntegration }
-  from '../../../../src/container/integrations/json-placeholder';
+  from '../../../src/container/integrations/json-placeholder';
 
 describe('JsonPlaceholderIntegration', () => {
   const baseURL = 'http://localhost:1500/jsonplaceholder';

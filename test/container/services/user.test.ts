@@ -1,9 +1,9 @@
 import { assert, sinon, expect } from '../../helpers';
-import { UserService } from '../../../../src/container/services/user';
-import { User } from '../../../../src/container/models/user';
-import { ResourceNotFoundError } from '../../../../src/errors';
-import { JsonPlaceholderUser } from '../../../../src/container/integrations/json-placeholder';
-import { UserSources } from '../../../../src/enums';
+import { UserService } from '../../../src/container/services/user';
+import { User } from '../../../src/container/models/user';
+import { ResourceNotFoundError } from '../../../src/errors';
+import { JsonPlaceholderUser } from '../../../src/container/integrations/json-placeholder';
+import { UserSources } from '../../../src/enums';
 
 describe('UserService', () => {
 
