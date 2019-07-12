@@ -19,6 +19,10 @@ export abstract class MySQLModel<T> {
     return this.database(this.getTableName());
   }
 
+  get transaction() {
+    return this.database.transaction;
+  }
+
   async create(data: Object, trx?: Transaction): Promise<string> {
     const [createdId] = await this.transactionable(trx).insert(data);
     return createdId.toString();
@@ -28,7 +32,7 @@ export abstract class MySQLModel<T> {
     return await this.transactionable(trx);
   }
 
-  async getById(id: string, trx?: Transaction): Promise<T|null> {
+  async getById(id: string, trx?: Transaction): Promise<T | null> {
     return await this.transactionable(trx).where('id', id).first();
   }
 

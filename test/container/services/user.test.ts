@@ -84,15 +84,13 @@ describe('UserService', () => {
         .map(jsonPlaceholderUser => jsonPlaceholderUser.email);
 
       const context = {
-        mysqlDatabase: {
-          transaction: sinon.fake((cb: Function) => cb()),
-        },
         jsonPlaceholderIntegration: {
           getUsers: sinon.fake.resolves(jsonPlaceholderUsers),
         },
         userModel: {
           getByEmailsWithSource: sinon.fake.resolves(sourceDatabaseUsers),
           create: sinon.fake.resolves('1'),
+          transaction: sinon.fake((cb: Function) => cb()),
         },
       };
 
@@ -101,7 +99,6 @@ describe('UserService', () => {
       const fetchedIds = await userService.fetchFromJsonPlaceholder();
 
       expect(fetchedIds).to.be.eql(['1']);
-      assert(context.mysqlDatabase.transaction.calledOnce);
       assert(context.jsonPlaceholderIntegration.getUsers.calledOnce);
       assert(context.userModel
         .getByEmailsWithSource(placeholderEmails, UserSources.JsonPlaceholder));
