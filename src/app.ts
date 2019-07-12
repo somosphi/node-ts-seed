@@ -1,16 +1,15 @@
-
 import elasticApmNode from 'elastic-apm-node';
-import knex, { Config } from 'knex';
+import knex from 'knex';
 import { HttpServer } from './http';
 import { Container } from './container';
 import { Worker } from './worker';
 import { logger } from './logger';
 
 export interface AppConfig {
-  knexConfig: Config;
-  apmServiceName: string;
-  apmServerUrl: string;
-  httpPort: string;
+  knexConfig: knex.Config;
+  apmServiceName?: string;
+  apmServerUrl?: string;
+  httpPort: number;
   httpBodyLimit: string;
   jsonPlaceholderUrl: string;
 }
@@ -67,7 +66,7 @@ export class Application {
     }
 
     this.httpServer = new HttpServer(container, {
-      port: (httpPort && parseInt(httpPort, 10)) || 3000,
+      port: httpPort,
       bodyLimit: httpBodyLimit,
     });
 
