@@ -12,7 +12,6 @@ describe('Bash', () => {
   }
 
   describe('#commandsCount', () => {
-
     it('should return 0 when commands is empty array', () => {
       // @ts-ignore
       const bash = new TestBash({});
