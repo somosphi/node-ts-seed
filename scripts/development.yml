@@ -1,0 +1,82 @@
+build-development:
+  stage: build
+  image: payly/docker-gitlab-ci:latest
+  services:
+    - docker:dind
+  before_script:
+    # Database
+    - echo "MYSQL_HOST=${DEVELOPMENT_MYSQL_HOST}" >> .env
+    - echo "MYSQL_DB=${DEVELOPMENT_MYSQL_DB}" >> .env
+    - echo "MYSQL_POOL_MIN=${DEVELOPMENT_MYSQL_POOL_MIN}" >> .env
+    - echo "MYSQL_POOL_MAX=${DEVELOPMENT_MYSQL_POOL_MAX}" >> .env
+    - echo "MYSQL_DB=${DEVELOPMENT_MYSQL_DB}" >> .env
+    - echo "MYSQL_USERNAME=${DEVELOPMENT_MYSQL_USERNAME}" >> .env
+    - echo "MYSQL_PASSWORD=${DEVELOPMENT_MYSQL_PASSWORD}" >> .env
+    # Application
+    - echo "NODE_ENV=production" >> .env
+    - echo "WPS_URL=${WPS_URL}" >> .env
+    - echo "WPS_TIMEOUT=${WPS_TIMEOUT}" >> .env
+    - echo "APM_SERVICE_NAME=${APM_SERVICE_NAME}" >> .env
+    - echo "APM_SERVER_URL=${APM_SERVER_URL}" >> .env
+    # Settings
+    - echo "SELF_URL=${DEVELOPMENT_SELF_URL}" >> .env
+    - echo "TOPAZIO_URL=${DEVELOPMENT_TOPAZIO_URL}" >> .env
+    - echo "AGREEMENT_URL=${AGREEMENT_URL}" >> .env
+    - echo "POSTBACK_TIMEOUT_LIMIT=${POSTBACK_TIMEOUT_LIMIT}" >> .env
+    - echo "POSTBACK_MAX_REJECTED_COUNT=${POSTBACK_MAX_REJECTED_COUNT}" >> .env
+    - echo "POSTBACK_LIMIT_PER_JOB=${POSTBACK_LIMIT_PER_JOB}" >> .env
+    - echo "PAYMENT_TIME_LIMIT=${PAYMENT_TIME_LIMIT}" >> .env
+    - echo "SCH_MAX_TRIES=${SCH_MAX_TRIES}" >> .env
+    - echo "SCH_TRY_INTERVAL=${SCH_TRY_INTERVAL}" >> .env
+    - echo "SCH_CHUNK_SIZE=${SCH_CHUNK_SIZE}" >> .env
+    - echo "SCH_PAY_CRON_CYCLE=${SCH_PAY_CRON_CYCLE}" >> .env
+    - echo "SCH_GET_CRON_CYCLE=${SCH_GET_CRON_CYCLE}" >> .env
+  script:
+    - $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+    - docker build -t $IMAGE_REPOSITORY .
+    - docker push $IMAGE_REPOSITORY
+  after_script:
+    - rm .env
+  only:
+    - develop
+
+migration-development:
+  stage: build
+  image: node:10-alpine
+  variables:
+    DB_HOST: $DEVELOPMENT_DB_HOST
+    DB_PORT: $DEVELOPMENT_DB_PORT
+    DB_POOL_MIN: $DEVELOPMENT_DB_POOL_MIN
+    DB_POOL_MAX: $DEVELOPMENT_DB_POOL_MAX
+    DB_DATABASE: $DEVELOPMENT_DB_DATABASE
+    DB_USERNAME: $DEVELOPMENT_DB_USERNAME
+    DB_PASSWORD: $DEVELOPMENT_DB_PASSWORD
+  script:
+    - npm install
+    - npm run migrate-local
+  only:
+    - develop
+
+deploy-development:
+  stage: deploy
+  image: cdrx/rancher-gitlab-deploy
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - upgrade --no-finish-upgrade --stack $RANCHER_STACK --service $RANCHER_SERVICE --new-image $IMAGE_REPOSITORY --environment $RANCHER_ENVIRONMENT_DEVELOPMENT
+  only:
+    - develop
+
+
+
+documentation:
+  stage: deploy
+  image: payly/node-gitlab-ci:latest
+  variables:
+    AWS_ACCESS_KEY_ID: $AWS_DOCUMENTATION_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $AWS_DOCUMENTATION_SECRET_ACCESS_KEY
+  script:
+    - aws s3 rm $AWS_DOCUMENTATION_ENV_DNS --recursive
+    - aws s3 cp ./docs/ $AWS_DOCUMENTATION_ENV_DNS --recursive
+  only:
+    - develop
