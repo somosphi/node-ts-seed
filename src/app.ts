@@ -27,8 +27,9 @@ export class Application {
 
   protected async initBash(container: Container): Promise<Bash> {
     const bash = new Bash(container);
+    const bashCommandIndex = process.argv.indexOf('--bash');
+    const signatures = process.argv.slice(bashCommandIndex + 1);
 
-    const signatures = process.argv.slice(2);
     if (signatures.length) {
       await bash.execute(signatures);
     }
@@ -63,8 +64,10 @@ export class Application {
       logger.info(`Registered service "${apmServiceName}" in APM Server`);
     }
 
-    this.bash = await this.initBash(container);
-    logger.info(`Bash started with ${this.bash.commandsCount} command(s)`);
+    if (process.argv.includes('--bash')) {
+      this.bash = await this.initBash(container);
+      process.exit(0);
+    }
 
     this.worker = new Worker(container);
     this.worker.start();
