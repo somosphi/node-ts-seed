@@ -1,4 +1,4 @@
-import elasticApmNode from 'elastic-apm-node';
+import './apm'
 import knex from 'knex';
 import { HttpServer } from './http';
 import { Container } from './container';
@@ -40,8 +40,6 @@ export class Application {
   async start(): Promise<void> {
     const {
       knexConfig,
-      apmServiceName,
-      apmServerUrl,
       httpPort,
       httpBodyLimit,
       jsonPlaceholderUrl,
@@ -55,14 +53,6 @@ export class Application {
         baseURL: jsonPlaceholderUrl,
       },
     });
-
-    if (apmServiceName && apmServerUrl) {
-      elasticApmNode.start({
-        serviceName: apmServiceName,
-        serverUrl: apmServerUrl,
-      });
-      logger.info(`Registered service "${apmServiceName}" in APM Server`);
-    }
 
     if (process.argv.includes('--bash')) {
       this.bash = await this.initBash(container);
