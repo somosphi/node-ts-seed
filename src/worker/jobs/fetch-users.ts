@@ -13,11 +13,14 @@ export class FetchUsersJob extends Cron {
 
   protected async handler(): Promise<void> {
     const fetchedUsers = await this.userService.fetchFromJsonPlaceholder();
-    logger.info(`Fetched ${fetchedUsers.length} users from json placeholder api`);
+    logger.info('Fetched users from json placeholder api', {
+      usersCount: fetchedUsers.length,
+    });
   }
 
   protected async errorHandler(err: Error): Promise<void> {
-    super.errorHandler(err);
-    logger.warn('Failed to fetch from json placeholder api');
+    logger.warn('Failed to fetch from json placeholder api', {
+      reason: err.message,
+    });
   }
 }
