@@ -6,10 +6,21 @@ const {
 } = winston.format;
 
 export const customFormat = printf((info) => {
-  const message = info instanceof Error ? info.stack : info.message;
+  const { level, message, ...data } = info;
+  const keys = Object.keys(data);
+  const msgsToConcat = [message];
+
+  if (keys.length) {
+    const metadata: any = {};
+    keys.forEach((key) => {
+      metadata[key] = data[key];
+    });
+    msgsToConcat.push(JSON.stringify(metadata));
+  }
+
   return `[${momentTimezone(info.timestamp)
     .utc()
-    .format('YYYY-MM-DD HH:mm:ss')}] ${info.level}: ${message}`;
+    .format('YYYY-MM-DD HH:mm:ss')}] ${info.level}: ${msgsToConcat.join(' ')}`;
 });
 
 export const logger = winston.createLogger({
