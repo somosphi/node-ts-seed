@@ -7,8 +7,6 @@ import { Bash } from './bash';
 
 export interface AppConfig {
   knexConfig: knex.Config;
-  apmServiceName?: string;
-  apmServerUrl?: string;
   httpPort: number;
   httpBodyLimit: string;
   jsonPlaceholderUrl: string;
