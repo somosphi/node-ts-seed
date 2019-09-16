@@ -20,7 +20,7 @@ export abstract class MySQLModel<T> {
   }
 
   get transaction() {
-    return this.database.transaction;
+    return this.database.transaction.bind(this.database);
   }
 
   async create(data: Object, trx?: Transaction): Promise<string> {

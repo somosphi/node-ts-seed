@@ -5,9 +5,9 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import { Container } from '../container';
 import { UserController } from './controllers/user';
-import { Controller } from './controllers/controller';
 import { errorHandlerMiddleware } from './middlewares/errorHandler';
 import { NotFoundError } from '../errors';
+import { BaseController } from './controllers/controller';
 
 export interface HttpServerConfig {
   port: number;
@@ -35,7 +35,7 @@ export class HttpServer {
     return this.app;
   }
 
-  protected loadControllers(): Controller[] {
+  protected loadControllers(): BaseController[] {
     return [
       new UserController(this.container),
     ];
@@ -70,9 +70,32 @@ export class HttpServer {
     );
 
     this.loadControllers().forEach((controller) => {
-      const router = express.Router({ mergeParams: true });
-      controller.register(router);
-      app.use(router);
+      if (!controller.routeConfigs) {
+        return;
+      }
+
+      controller.routeConfigs.forEach((routeConfig) => {
+        const fullPath = [controller.path, routeConfig.path].join('');
+        const jobs = [...routeConfig.middlewares, routeConfig.func.bind(controller)];
+
+        switch (routeConfig.method) {
+          case 'get':
+            app.get(fullPath, jobs);
+            break;
+          case 'post':
+            app.post(fullPath, jobs);
+            break;
+          case 'put':
+            app.put(fullPath, jobs);
+            break;
+          case 'patch':
+            app.patch(fullPath, jobs);
+            break;
+          case 'delete':
+            app.delete(fullPath, jobs);
+            break;
+        }
+      });
     });
 
     app.use('*', (req: express.Request, res: express.Response, next: express.NextFunction) => {

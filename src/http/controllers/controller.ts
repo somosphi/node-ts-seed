@@ -1,5 +1,6 @@
-import { Router } from 'express';
+import { RouteConfig } from '../decorators';
 
-export abstract class Controller {
-  abstract register(router: Router): void;
+export abstract class BaseController {
+  path?: string;
+  routeConfigs?: RouteConfig[];
 }
