@@ -1,4 +1,3 @@
-import './apm'
 import knex from 'knex';
 import { HttpServer } from './http';
 import { Container } from './container';
@@ -16,6 +15,7 @@ export interface AppConfig {
 }
 
 export class Application {
+  protected readonly bashFlag = '--bash';
   protected readonly config: AppConfig;
   protected httpServer?: HttpServer;
   protected worker?: Worker;
@@ -27,7 +27,7 @@ export class Application {
 
   protected async initBash(container: Container): Promise<Bash> {
     const bash = new Bash(container);
-    const bashCommandIndex = process.argv.indexOf('--bash');
+    const bashCommandIndex = process.argv.indexOf(this.bashFlag);
     const signatures = process.argv.slice(bashCommandIndex + 1);
 
     if (signatures.length) {
@@ -54,7 +54,7 @@ export class Application {
       },
     });
 
-    if (process.argv.includes('--bash')) {
+    if (process.argv.includes(this.bashFlag)) {
       this.bash = await this.initBash(container);
       process.exit(0);
     }

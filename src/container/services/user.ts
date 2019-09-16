@@ -1,4 +1,3 @@
-import knex from 'knex';
 import { UserModel, User } from '../models/user';
 import { JsonPlaceholderIntegration } from '../integrations/json-placeholder';
 import { UserSources } from '../../enums';

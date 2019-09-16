@@ -34,12 +34,12 @@ export class Bash {
     for (const signature of signatures) {
       const command = this.getCommandBySignature(signature);
       if (!command) {
-        logger.warn(`Invalid command signature "${signature}"`);
+        logger.warn('Invalid command signature', { signature });
         return;
       }
       try {
         await command.handle();
-        logger.info(`Bash command "${signature}" handle with successfully`);
+        logger.info('Bash command handled with successfully', { signature });
       } catch (err) {
         logger.error(err);
       }
