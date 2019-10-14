@@ -2,7 +2,8 @@
 log
 *.log
 npm-debug.log*
-.vscode
+.vscode/*
+!.vscode/node-seed.code-snippets
 
 # Build
 lib
