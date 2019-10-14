@@ -33,8 +33,8 @@
         ],
         "description": "Integration class"
     },
-    "model": {
-        "prefix": "model",
+    "mysql-model": {
+        "prefix": "mysql-model",
         "body": [
             "import { MySQLModel } from './mysql';\n",
             "export interface ${className:} {",
