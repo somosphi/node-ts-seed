@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Ongoing Changes
 
+## [1.1.0]
+### Added
+- Snippets for vscode;
+
 ## [1.0.0]
 ### Added
 - Skeleton project base;
