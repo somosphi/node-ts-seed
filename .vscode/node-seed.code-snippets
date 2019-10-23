@@ -1,0 +1,97 @@
+{
+    "command": {
+        "prefix": "command",
+        "body": [
+            "import { Command } from './command';\n",
+            "export class $1Command extends Command {",
+            "\tsignature: string = '$2';\n",
+            "\tconstructor() {",
+            "\t\tsuper();",
+            "\t}\n",
+            "\tasync handle(): Promise<void> {",
+            "\t\t$3",
+            "\t}",
+            "}",
+        ],
+        "description": "Command class"
+    },
+    "integration": {
+        "prefix": "integration",
+        "body": [
+            "import { HttpIntegration } from './http';\n",
+            "export interface ${className:}Config {",
+            "\tbaseURL: string;",
+            "}\n",
+            "export class ${className:}Integration extends HttpIntegration {\n",
+            "\tconstructor(options: ${className:}Config) {",
+            "\t\tsuper({",
+            "\t\t\tbaseURL: options.baseURL,",
+            "\t\t});",
+            "\t}\n",
+            "\t$0",
+            "}"
+        ],
+        "description": "Integration class"
+    },
+    "mysql-model": {
+        "prefix": "mysql-model",
+        "body": [
+            "import { MySQLModel } from './mysql';\n",
+            "export interface ${className:} {",
+            "\t",
+            "}\n",
+            "export class ${className:}Model extends MySQLModel<${className:}> {\n",
+            "\tgetTableName(): string {",
+            "\t\treturn '$2';",
+            "\t}\n",
+            "\t$0",
+            "}"
+        ],
+        "description": "Model class"
+    },
+    "service": {
+        "prefix": "service",
+        "body": [
+            "import { ServiceContext } from '..';\n",
+            "export class $1Service {\n",
+            "\tconstructor(context: ServiceContext) {",
+            "\t\t",
+            "\t}\n",
+            "\t$0",
+            "}"
+        ],
+        "description": "Service class"
+    },
+    "controller": {
+        "prefix": "controller",
+        "body": [
+            "import { Container } from '../../container';",
+            "import { Controller } from '../decorators';",
+            "import { BaseController } from './controller';\n",
+            "@Controller('/$1')",
+            "export class ${className:}Controller extends BaseController {",
+            "\tprotected $2Service: ${className:}Service;\n",
+            "\tconstructor(container: Container) {",
+            "\t\tsuper();",
+            "\t}\n",
+            "\t$0",
+            "}"
+        ],
+        "description": "Controller class"
+    },
+    "job": {
+        "prefix": "job",
+        "body": [
+            "import { Cron } from './cron';\n",
+            "export class $1Job extends Cron {\n",
+            "\tconstructor() {",
+            "\t\tsuper('*/60 * * * * *');",
+            "\t}\n",
+            "\tprotected async handler(): Promise<void> {",
+            "\t\t$0",
+            "\t}\n",
+            "}"
+        ],
+        "description": "Job class"
+    }
+}
