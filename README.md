@@ -1,16 +1,26 @@
 # node-ts-seed
 
-### Installing and testing the app
+### Installing dependencies
 
 ```sh
 $ npm install
+```
+
+### Running in development mode
+
+```sh
+$ npm run dev
+```
+
+### Testing the app
+
+```sh
 $ npm run test
 ```
 
 ### Building production version
  
 ```sh
-$ npm install
 $ npm run build
 ```
 
@@ -19,6 +29,5 @@ The folder "lib" should be commited in master branch to install this package usi
 ### TSLint
 
 ```sh
-$ npm install
 $ npm run lint
 ```
