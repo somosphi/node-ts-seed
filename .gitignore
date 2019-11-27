@@ -4,6 +4,7 @@ log
 npm-debug.log*
 .vscode/*
 !.vscode/node-seed.code-snippets
+!.vscode/launch.json
 
 # Build
 lib
