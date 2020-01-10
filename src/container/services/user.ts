@@ -1,8 +1,8 @@
-import { UserModel, User } from '../models/user';
-import { JsonPlaceholderIntegration } from '../integrations/json-placeholder';
-import { UserSources } from '../../enums';
-import { ServiceContext } from '..';
-import { ResourceNotFoundError } from '../../errors';
+import { UserModel, User } from "../models/user";
+import { JsonPlaceholderIntegration } from "../integrations/http/json-placeholder";
+import { UserSources } from "../../enums";
+import { ServiceContext } from "..";
+import { ResourceNotFoundError } from "../../errors";
 
 export class UserService {
   protected readonly userModel: UserModel;
@@ -28,32 +28,38 @@ export class UserService {
   async fetchFromJsonPlaceholder(): Promise<string[]> {
     const jsonPlaceholderUsers = await this.jsonPlaceholderIntegration.getUsers();
 
-    const jsonPlaceholderEmails = jsonPlaceholderUsers
-      .map(jsonPlaceholderUser => jsonPlaceholderUser.email);
+    const jsonPlaceholderEmails = jsonPlaceholderUsers.map(
+      jsonPlaceholderUser => jsonPlaceholderUser.email
+    );
 
     const fetchedIds: string[] = [];
 
-    await this.userModel.transaction(async (trx) => {
-      const sourceDatabaseUsers = await this.userModel
-        .getByEmailsWithSource(jsonPlaceholderEmails, UserSources.JsonPlaceholder, trx);
+    await this.userModel.transaction(async trx => {
+      const sourceDatabaseUsers = await this.userModel.getByEmailsWithSource(
+        jsonPlaceholderEmails,
+        UserSources.JsonPlaceholder,
+        trx
+      );
 
       await Promise.all(
-        jsonPlaceholderUsers.map(async (jsonPlaceholderUser) => {
+        jsonPlaceholderUsers.map(async jsonPlaceholderUser => {
           const jsonPlaceholderEmail = jsonPlaceholderUser.email.toLowerCase();
 
-          const sourceDatabaseUser = sourceDatabaseUsers
-            .find(sourceDatabaseUser => sourceDatabaseUser.emailAddress === jsonPlaceholderEmail);
+          const sourceDatabaseUser = sourceDatabaseUsers.find(
+            sourceDatabaseUser =>
+              sourceDatabaseUser.emailAddress === jsonPlaceholderEmail
+          );
 
           if (!sourceDatabaseUser) {
             const createData = {
               name: jsonPlaceholderUser.name,
               username: jsonPlaceholderUser.username,
               emailAddress: jsonPlaceholderEmail,
-              source: UserSources.JsonPlaceholder,
+              source: UserSources.JsonPlaceholder
             };
             fetchedIds.push(await this.userModel.create(createData, trx));
           }
-        }),
+        })
       );
     });
 

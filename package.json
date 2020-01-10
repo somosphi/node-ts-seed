@@ -18,7 +18,10 @@
     "url": "https://github.com/4alltecnologia/node-ts-seed"
   },
   "dependencies": {
+    "@types/amqplib": "^0.5.13",
     "@hapi/joi": "^15.1.1",
+    "amqplib": "^0.5.3",
+    "amqplib-as-promised": "^3.15.1",
     "axios": "^0.19.0",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
@@ -33,6 +36,7 @@
     "moment-timezone": "^0.5.25",
     "mysql2": "^1.7.0",
     "supertest": "^4.0.2",
+    "typescript-rabbitmq": "0.0.8",
     "winston": "^3.2.1"
   },
   "devDependencies": {
