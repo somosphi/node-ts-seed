@@ -1,5 +1,6 @@
 import { HomeVHost } from "./providers/home-vhost";
 import { RabbitMQConfig } from "./providers/rabbitmq";
+import { WorkVHost } from "./providers/work-vhost";
 
 export class AMQPServer {
   protected readonly config: RabbitMQConfig;
@@ -8,12 +9,15 @@ export class AMQPServer {
     this.config = config;
   }
 
-  private async loadVHosts() {
-    const homeVHost = new HomeVHost("home", this.config);
-    await homeVHost.init();
+  async start() {
+    await this.init();
   }
 
-  async start() {
-    await this.loadVHosts();
+  private async init() {
+    const homeVHost = new HomeVHost("home", this.config);
+    await homeVHost.init();
+
+    const workVHost = new WorkVHost("work", this.config);
+    await workVHost.init();
   }
 }
