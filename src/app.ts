@@ -4,8 +4,6 @@ import { Container } from "./container";
 import { Worker } from "./worker";
 import { logger } from "./logger";
 import { Bash } from "./bash";
-import { RabbitMQ } from "./amqp/providers/rabbitmq";
-import { HomeVHost } from "./amqp/providers/home-vhost";
 import { AMQPServer } from "./amqp";
 
 export interface AppConfig {
@@ -56,7 +54,9 @@ export class Application {
       rabbitMQHost,
       rabbitMQPort,
       rabbitMQUsername,
-      rabbitMQPassword
+      rabbitMQPassword,
+      rabbitMQHomeVHost,
+      rabbitMQWorkVHost
     } = this.config;
 
     const mysqlDatabase = knex(knexConfig);
@@ -84,7 +84,7 @@ export class Application {
     this.httpServer.start();
     logger.info(`Http server started in port ${this.httpServer.port}`);
 
-    this.amqpServer = new AMQPServer({
+    this.amqpServer = new AMQPServer([rabbitMQHomeVHost, rabbitMQWorkVHost], {
       rabbitMQProtocol,
       rabbitMQHost,
       rabbitMQPort,
