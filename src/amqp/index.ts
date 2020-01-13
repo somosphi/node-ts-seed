@@ -1,23 +1,28 @@
-import { HomeVHost } from "./providers/home-vhost";
+import { HomeVHost } from "./vhosts/home-vhost";
 import { RabbitMQConfig } from "./providers/rabbitmq";
-import { WorkVHost } from "./providers/work-vhost";
+import { WorkVHost } from "./vhosts/work-vhost";
 
 export class AMQPServer {
   protected readonly config: RabbitMQConfig;
+  protected readonly vHosts: string[];
 
-  constructor(config: RabbitMQConfig) {
+  constructor(vHosts: string[], config: RabbitMQConfig) {
     this.config = config;
+    this.vHosts = vHosts;
   }
 
   async start() {
-    await this.init();
-  }
-
-  private async init() {
-    const homeVHost = new HomeVHost("home", this.config);
-    await homeVHost.init();
-
-    const workVHost = new WorkVHost("work", this.config);
-    await workVHost.init();
+    this.vHosts.map(async vHost => {
+      switch (vHost) {
+        case "home":
+          const homeVHost = new HomeVHost(vHost, this.config);
+          await homeVHost.init();
+          break;
+        case "work":
+          const workVHost = new WorkVHost(vHost, this.config);
+          await workVHost.init();
+          break;
+      }
+    });
   }
 }

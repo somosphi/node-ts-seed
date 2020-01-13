@@ -25,6 +25,7 @@ export abstract class RabbitMQ {
       this.connection = await connect(this.connectionConfig());
       logger.info(`RabbitMQ connection established on vhost - ${this.vHost}
         `);
+      this.handleOnError();
       this.channel = await this.connection.createChannel();
     } catch (err) {
       logger.error(
@@ -32,6 +33,21 @@ export abstract class RabbitMQ {
       );
       this.reconnect();
     }
+  }
+
+  getChannel(): Channel {
+    return this.channel;
+  }
+
+  private connectionConfig(): Options.Connect {
+    return {
+      hostname: this.config.rabbitMQHost,
+      username: this.config.rabbitMQUsername,
+      password: this.config.rabbitMQPassword,
+      protocol: this.config.rabbitMQProtocol,
+      port: this.config.rabbitMQPort,
+      vhost: this.vHost
+    };
   }
 
   private handleOnError() {
@@ -51,16 +67,5 @@ export abstract class RabbitMQ {
     setTimeout(() => {
       this.init();
     }, 5000);
-  }
-
-  private connectionConfig(): Options.Connect {
-    return {
-      hostname: this.config.rabbitMQHost,
-      username: this.config.rabbitMQUsername,
-      password: this.config.rabbitMQPassword,
-      protocol: this.config.rabbitMQProtocol,
-      port: this.config.rabbitMQPort,
-      vhost: this.vHost
-    };
   }
 }
