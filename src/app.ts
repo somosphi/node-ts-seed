@@ -1,10 +1,10 @@
-import knex from "knex";
-import { HttpServer } from "./http";
-import { Container } from "./container";
-import { Worker } from "./worker";
-import { logger } from "./logger";
-import { Bash } from "./bash";
-import { AMQPServer } from "./amqp";
+import knex from 'knex';
+import { HttpServer } from './http';
+import { Container } from './container';
+import { Worker } from './worker';
+import { logger } from './logger';
+import { Bash } from './bash';
+import { AMQPServer } from './amqp';
 
 export interface AppConfig {
   knexConfig: knex.Config;
@@ -21,7 +21,7 @@ export interface AppConfig {
 }
 
 export class Application {
-  protected readonly bashFlag = "--bash";
+  protected readonly bashFlag = '--bash';
   protected readonly config: AppConfig;
   protected httpServer?: HttpServer;
   protected worker?: Worker;
@@ -56,7 +56,7 @@ export class Application {
       rabbitMQUsername,
       rabbitMQPassword,
       rabbitMQHomeVHost,
-      rabbitMQWorkVHost
+      rabbitMQWorkVHost,
     } = this.config;
 
     const mysqlDatabase = knex(knexConfig);
@@ -64,8 +64,8 @@ export class Application {
     const container = new Container({
       mysqlDatabase,
       jsonPlaceholderConfig: {
-        baseURL: jsonPlaceholderUrl
-      }
+        baseURL: jsonPlaceholderUrl,
+      },
     });
 
     if (process.argv.includes(this.bashFlag)) {
@@ -79,7 +79,7 @@ export class Application {
 
     this.httpServer = new HttpServer(container, {
       port: httpPort,
-      bodyLimit: httpBodyLimit
+      bodyLimit: httpBodyLimit,
     });
     this.httpServer.start();
     logger.info(`Http server started in port ${this.httpServer.port}`);
@@ -89,7 +89,7 @@ export class Application {
       rabbitMQHost,
       rabbitMQPort,
       rabbitMQUsername,
-      rabbitMQPassword
+      rabbitMQPassword,
     });
 
     await this.amqpServer.start();
