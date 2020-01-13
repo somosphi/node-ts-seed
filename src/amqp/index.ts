@@ -10,7 +10,7 @@ export class AMQPServer {
 
   private async loadVHosts() {
     const homeVHost = new HomeVHost("home", this.config);
-    await homeVHost.start();
+    await homeVHost.init();
   }
 
   async start() {

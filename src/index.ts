@@ -14,11 +14,11 @@ const application = new Application({
   httpBodyLimit: process.env.HTTP_BODY_LIMIT || "10kb",
   jsonPlaceholderUrl:
     process.env.JSON_PLACEHOLDER_URL || "https://jsonplaceholder.typicode.com",
-  rabbitMQProtocol: process.env.RABBIT_PROTOCOL || "amqp",
-  rabbitMQHost: process.env.RABBIT_HOST || "localhost",
-  rabbitMQPort: parseInt(process.env.RABBIT_PORT || "5672"),
-  rabbitMQUsername: process.env.RABBIT_USERNAME || "admin",
-  rabbitMQPassword: process.env.RABBIT_PASSWORD || "admin",
+  rabbitMQProtocol: process.env.RABBITMQ_PROTOCOL || "amqp",
+  rabbitMQHost: process.env.RABBITMQ_HOST || "localhost",
+  rabbitMQPort: parseInt(process.env.RABBITMQ_PORT || "5672"),
+  rabbitMQUsername: process.env.RABBITMQ_USERNAME || "admin",
+  rabbitMQPassword: process.env.RABBITMQ_PASSWORD || "admin",
   rabbitMQHomeVHost: process.env.RABBITMQ_HOME_VHOST || "/",
   rabbitMQWorkVHost: process.env.RABBITMQ_WORK_VHOST || "/"
 });
