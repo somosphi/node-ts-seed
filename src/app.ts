@@ -84,13 +84,17 @@ export class Application {
     this.httpServer.start();
     logger.info(`Http server started in port ${this.httpServer.port}`);
 
-    this.amqpServer = new AMQPServer([rabbitMQHomeVHost, rabbitMQWorkVHost], {
-      rabbitMQProtocol,
-      rabbitMQHost,
-      rabbitMQPort,
-      rabbitMQUsername,
-      rabbitMQPassword,
-    });
+    this.amqpServer = new AMQPServer(
+      [rabbitMQHomeVHost, rabbitMQWorkVHost],
+      {
+        rabbitMQProtocol,
+        rabbitMQHost,
+        rabbitMQPort,
+        rabbitMQUsername,
+        rabbitMQPassword,
+      },
+      container
+    );
 
     await this.amqpServer.start();
     logger.info(`AMQP server started`);
