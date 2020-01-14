@@ -11,11 +11,14 @@ export interface UserMessage {
   emailAddress: string;
 }
 
-@RabbitMQInjection('work')
 export class UserProducer implements Producer {
-  vHost!: RabbitMQ;
   private readonly exchange: string = 'user.dx';
   private readonly routingKey: string = 'user.create';
+  protected readonly vHost: RabbitMQ;
+
+  constructor(vHost: RabbitMQ) {
+    this.vHost = vHost;
+  }
 
   send(message: UserMessage): void {
     const optionsConfig: Options.Publish = {
