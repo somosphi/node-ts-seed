@@ -1,5 +1,5 @@
-import { Options, Channel, Connection, connect } from "amqplib";
-import { logger } from "../../logger";
+import { Options, Channel, Connection, connect } from 'amqplib';
+import { logger } from '../../logger';
 
 export interface RabbitMQConfig {
   rabbitMQProtocol: string;
@@ -46,16 +46,16 @@ export abstract class RabbitMQ {
       password: this.config.rabbitMQPassword,
       protocol: this.config.rabbitMQProtocol,
       port: this.config.rabbitMQPort,
-      vhost: this.vHost
+      vhost: this.vHost,
     };
   }
 
   private handleOnError() {
-    this.connection.on("blocked", reason => {
+    this.connection.on('blocked', reason => {
       logger.error(`Connection blocked because of ${reason}`);
     });
-    this.connection.on("close", () => this.reconnect());
-    this.connection.on("error", () => this.reconnect());
+    this.connection.on('close', () => this.reconnect());
+    this.connection.on('error', () => this.reconnect());
   }
 
   private reconnect() {
