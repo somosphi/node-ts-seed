@@ -1,16 +1,21 @@
-import { UserModel, User } from "../models/user";
-import { JsonPlaceholderIntegration } from "../integrations/http/json-placeholder";
-import { UserSources } from "../../enums";
-import { ServiceContext } from "..";
-import { ResourceNotFoundError } from "../../errors";
+import { UserModel, User } from '../models/user';
+import { JsonPlaceholderIntegration } from '../integrations/http/json-placeholder';
+import { UserSources } from '../../enums';
+import { ServiceContext } from '..';
+import { ResourceNotFoundError } from '../../errors';
+import { UserProducer } from '../integrations/amqp/producers/user';
 
 export class UserService {
   protected readonly userModel: UserModel;
   protected readonly jsonPlaceholderIntegration: JsonPlaceholderIntegration;
+  protected readonly userProducer: UserProducer;
 
   constructor(context: ServiceContext) {
     this.userModel = context.userModel;
     this.jsonPlaceholderIntegration = context.jsonPlaceholderIntegration;
+    this.userProducer = context.userProducer;
+    console.log('loga aqui ---' + this.userProducer.vHost);
+    this.notifyMesage('1');
   }
 
   all(): Promise<User[]> {
@@ -23,6 +28,11 @@ export class UserService {
       throw new ResourceNotFoundError();
     }
     return user;
+  }
+
+  async notifyMesage(id: string) {
+    const { name, username, emailAddress } = await this.findById(id);
+    this.userProducer.send({ id, name, username, emailAddress });
   }
 
   async fetchFromJsonPlaceholder(): Promise<string[]> {
@@ -55,7 +65,7 @@ export class UserService {
               name: jsonPlaceholderUser.name,
               username: jsonPlaceholderUser.username,
               emailAddress: jsonPlaceholderEmail,
-              source: UserSources.JsonPlaceholder
+              source: UserSources.JsonPlaceholder,
             };
             fetchedIds.push(await this.userModel.create(createData, trx));
           }

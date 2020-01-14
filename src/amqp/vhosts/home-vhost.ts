@@ -1,10 +1,10 @@
-import { RabbitMQ, RabbitMQConfig } from '../providers/rabbitmq';
-import { RabbitMQConsumer } from '../providers/rabbitmq-consumer';
-import { Consumer } from '../providers/consumer';
+import { RabbitMQ, RabbitMQConfig } from '../vhosts/index';
+import { RabbitMQConsumer } from '../rabbitmq-consumer';
+import { Consumer } from '../consumer';
 
 export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
   vHostName: string;
-  consumers: Consumer[];
+  //consumers: Consumer[];
 
   constructor(vHost: string, config: RabbitMQConfig) {
     super(vHost, config);

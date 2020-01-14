@@ -1,8 +1,8 @@
-import { RabbitMQ as RabbitMQAbstract } from './providers/rabbitmq';
+import { RabbitMQ as RabbitMQAbstract } from './vhosts/index';
 import { AMQPServer } from '.';
 
 // tslint:disable-next-line:variable-name
-export const RabbitMQ = (vHostName: string) =>
+export const RabbitMQInjection = (vHostName: string) =>
   function(constructorFunction: Function) {
     const vHost = AMQPServer.readyVhosts.find(
       (vHost: RabbitMQAbstract) => vHost.vHost === vHostName

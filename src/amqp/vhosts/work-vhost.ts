@@ -1,4 +1,4 @@
-import { RabbitMQ, RabbitMQConfig } from '../providers/rabbitmq';
+import { RabbitMQ, RabbitMQConfig } from '../vhosts/index';
 
 export class WorkVHost extends RabbitMQ {
   constructor(vHost: string, config: RabbitMQConfig) {

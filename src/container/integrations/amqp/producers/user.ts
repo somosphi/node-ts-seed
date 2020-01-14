@@ -1,6 +1,8 @@
+import { RabbitMQInjection } from '../../../../amqp/decorator';
 import { Producer } from './producer';
 import { logger } from '../../../../logger';
-import { Channel, Options } from 'amqplib';
+import { RabbitMQ } from '../../../../amqp/vhosts';
+import { Options } from 'amqplib';
 
 export interface UserMessage {
   id: string;
@@ -9,22 +11,27 @@ export interface UserMessage {
   emailAddress: string;
 }
 
-export class UserProducer extends Producer {
+@RabbitMQInjection('work')
+export class UserProducer implements Producer {
+  vHost!: RabbitMQ;
   private readonly exchange: string = 'user.dx';
   private readonly routingKey: string = 'user.create';
 
-  constructor(channel: Channel) {
-    super(channel);
-  }
-
-  sendMessage(content: UserMessage) {
-    const options: Options.Publish = {
+  send(message: UserMessage): void {
+    const optionsConfig: Options.Publish = {
       priority: 0,
       deliveryMode: 2,
       contentEncoding: 'UTF-8',
       contentType: 'application/json',
     };
-
-    super.send(this.exchange, this.routingKey, content, options);
+    try {
+      this.vHost.send(this.exchange, this.routingKey, message, optionsConfig);
+      logger.info(
+        `Sending message to exchange - ${this.exchange} and routingKey - ${this.routingKey}`
+      );
+    } catch (err) {
+      logger.error(`Error sending message to exchange ${this.exchange}
+       and routingKey - ${this.routingKey} -> reason: ${err}`);
+    }
   }
 }

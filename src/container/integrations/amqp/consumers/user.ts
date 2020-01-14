@@ -1,5 +1,5 @@
-import { RabbitMQ } from '../../../../amqp/decorator';
+import { RabbitMQInjection } from '../../../../amqp/decorator';
 import { Consumer } from './consumer';
 
-@RabbitMQ('home')
+@RabbitMQInjection('home')
 export class UserConsumer implements Consumer {}

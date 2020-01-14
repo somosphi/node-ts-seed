@@ -1,5 +1,5 @@
-import { Options, Channel } from "amqplib";
-import { logger } from "../../logger";
+import { Options, Channel } from 'amqplib';
+import { logger } from '../logger';
 
 export class RabbitMQManager {
   protected readonly channel: Channel;

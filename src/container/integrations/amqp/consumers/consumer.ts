@@ -1,4 +1,4 @@
-import { RabbitMQ } from '../../../../amqp/providers/rabbitmq';
+import { RabbitMQ } from '../../../../amqp/vhosts/index';
 
 export interface Consumer {
   vHost?: RabbitMQ;
