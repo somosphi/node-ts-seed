@@ -1,5 +1,5 @@
 import { HomeVHost } from './vhosts/home-vhost';
-import { RabbitMQConfig, RabbitMQ } from './providers/rabbitmq';
+import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
 import { WorkVHost } from './vhosts/work-vhost';
 import { Container } from '../container';
 export class AMQPServer {

@@ -1,4 +1,4 @@
-import { RabbitMQ as RabbitMQAbstract } from './providers/rabbitmq';
+import { RabbitMQ as RabbitMQAbstract } from './vhosts/index';
 import { AMQPServer } from '.';
 
 export const createConsumerDecorator = () =>

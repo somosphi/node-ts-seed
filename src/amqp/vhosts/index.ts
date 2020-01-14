@@ -1,5 +1,6 @@
 import { Options, Channel, Connection, connect } from 'amqplib';
 import { logger } from '../../logger';
+import { BufferConverter } from '../buffer-converter';
 
 export interface RabbitMQConfig {
   rabbitMQProtocol: string;
@@ -35,8 +36,22 @@ export abstract class RabbitMQ {
     }
   }
 
-  getChannel(): Channel {
-    return this.channel;
+  send(
+    exchange: string,
+    routingKey: string,
+    message: object,
+    additionalParams?: Options.Publish
+  ) {
+    try {
+      this.channel.publish(
+        exchange || '',
+        routingKey,
+        BufferConverter.converter(message),
+        additionalParams
+      );
+    } catch (err) {
+      throw Error(`Error Posting Message to RabbitMQ Server - cause ${err}`);
+    }
   }
 
   private connectionConfig(): Options.Connect {
