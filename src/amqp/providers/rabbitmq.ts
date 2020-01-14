@@ -13,7 +13,7 @@ export abstract class RabbitMQ {
   protected connection!: Connection;
   protected channel!: Channel;
   protected readonly config: RabbitMQConfig;
-  protected readonly vHost: string;
+  readonly vHost: string;
 
   constructor(vHost: string, config: RabbitMQConfig) {
     this.config = config;
