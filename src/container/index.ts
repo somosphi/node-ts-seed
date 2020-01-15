@@ -6,9 +6,8 @@ import {
   JsonPlaceholderConfig,
 } from './integrations/http/json-placeholder';
 import { UserProducer } from './integrations/amqp/producers/user';
-import { RabbitMQ } from '../amqp/vhosts';
-import { WorkVHost } from '../amqp/vhosts/work-vhost';
-import { HomeVHost } from '../amqp/vhosts/home-vhost';
+import { WorkVHost } from '../amqp/vhosts/work';
+import { HomeVHost } from '../amqp/vhosts/home';
 
 export interface ServiceContext {
   userModel: UserModel;

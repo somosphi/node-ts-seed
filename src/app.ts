@@ -5,8 +5,7 @@ import { Worker } from './worker';
 import { logger } from './logger';
 import { Bash } from './bash';
 import { AMQPServer } from './amqp';
-import { RabbitMQConfig, RabbitMQ } from './amqp/vhosts';
-
+import { RabbitMQConfig } from './amqp/vhosts';
 export interface AppConfig {
   knexConfig: knex.Config;
   httpPort: number;
@@ -56,19 +55,19 @@ export class Application {
       rabbitMQPort,
       rabbitMQUsername,
       rabbitMQPassword,
-      rabbitMQHomeVHost,
-      rabbitMQWorkVHost,
     } = this.config;
 
     const mysqlDatabase = knex(knexConfig);
 
-    this.amqpServer = new AMQPServer([rabbitMQHomeVHost, rabbitMQWorkVHost], {
-      rabbitMQProtocol,
-      rabbitMQHost,
-      rabbitMQPort,
-      rabbitMQUsername,
-      rabbitMQPassword,
-    });
+    const rabbitMQConfig: RabbitMQConfig = {
+      protocol: rabbitMQProtocol,
+      host: rabbitMQHost,
+      port: rabbitMQPort,
+      username: rabbitMQUsername,
+      password: rabbitMQPassword,
+    };
+
+    this.amqpServer = new AMQPServer(rabbitMQConfig);
 
     await this.amqpServer.start();
     logger.info(`AMQP server started`);
@@ -78,9 +77,11 @@ export class Application {
       jsonPlaceholderConfig: {
         baseURL: jsonPlaceholderUrl,
       },
-      homeVHost: this.amqpServer.getHomeVHost(),
-      workVHost: this.amqpServer.getWorkVHost(),
+      homeVHost: this.amqpServer.vhosts.home,
+      workVHost: this.amqpServer.vhosts.work,
     });
+
+    this.amqpServer.startAllConsumers(container);
 
     if (process.argv.includes(this.bashFlag)) {
       this.bash = await this.initBash(container);
