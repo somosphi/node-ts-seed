@@ -1,6 +1,6 @@
 import { RabbitMQ } from '../vhosts';
 import { Container } from '../../container';
-import { ConsumeMessage } from 'amqplib';
+import { ConsumeMessage, Channel, Message } from 'amqplib';
 
 export abstract class Consumer {
   queue: string;
@@ -11,5 +11,12 @@ export abstract class Consumer {
     this.container = container;
   }
 
-  onConsume(message: ConsumeMessage | null): void {}
+  messageHandler(message: ConsumeMessage | null) {}
+
+  onConsume(channel: Channel) {
+    return (message: Message | null) => {
+      this.messageHandler(message);
+      if (message) channel.ack(message);
+    };
+  }
 }

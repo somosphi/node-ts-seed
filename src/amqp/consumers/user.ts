@@ -7,7 +7,7 @@ export class UserConsumer extends Consumer {
     super(queue, container);
   }
 
-  onConsume(message: ConsumeMessage | null) {
+  messageHandler(message: ConsumeMessage | null) {
     console.log(message);
   }
 }
