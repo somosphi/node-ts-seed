@@ -13,7 +13,7 @@ export class RabbitMQManager {
     routingKeyName: string,
     pattern: string,
     args?: any
-  ) {
+  ): Promise<void> {
     const resp = await this.channel.bindQueue(
       queueName,
       routingKeyName,
@@ -29,7 +29,7 @@ export class RabbitMQManager {
     exchangeName: string,
     type: string,
     additionalParams?: Options.AssertExchange
-  ) {
+  ): Promise<void> {
     const resp = await this.channel.assertExchange(
       exchangeName,
       type,
@@ -38,7 +38,10 @@ export class RabbitMQManager {
     logger.info(`Create Exchange: response - ${resp.exchange}`);
   }
 
-  async createQueue(queueName: string, additionalParams?: Options.AssertQueue) {
+  async createQueue(
+    queueName: string,
+    additionalParams?: Options.AssertQueue
+  ): Promise<void> {
     const resp = await this.channel.assertQueue(queueName, additionalParams);
     logger.info(`Create Queue: response: ${resp.queue}`);
   }
