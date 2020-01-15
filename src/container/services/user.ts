@@ -5,6 +5,12 @@ import { ServiceContext } from '..';
 import { ResourceNotFoundError } from '../../errors';
 import { UserProducer } from '../integrations/amqp/producers/user';
 
+export interface CreateUserDTO {
+  name: string;
+  username: string;
+  emailAddress: string;
+  source: UserSources;
+}
 export class UserService {
   protected readonly userModel: UserModel;
   protected readonly jsonPlaceholderIntegration: JsonPlaceholderIntegration;
@@ -14,8 +20,6 @@ export class UserService {
     this.userModel = context.userModel;
     this.jsonPlaceholderIntegration = context.jsonPlaceholderIntegration;
     this.userProducer = context.userProducer;
-    console.log('loga aqui ---' + this.userProducer.vHost);
-    this.notifyMesage('1');
   }
 
   all(): Promise<User[]> {
@@ -28,6 +32,18 @@ export class UserService {
       throw new ResourceNotFoundError();
     }
     return user;
+  }
+
+  async create(userDto: CreateUserDTO): Promise<string> {
+    const { name, username, emailAddress } = userDto;
+
+    try {
+      const id = await this.userModel.create(userDto);
+      this.userProducer.send({ id, name, username, emailAddress });
+      return id;
+    } catch (err) {
+      throw new Error(`Error creating user - reason: ${err}`);
+    }
   }
 
   async notifyMesage(id: string) {

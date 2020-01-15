@@ -6,6 +6,9 @@ import {
   JsonPlaceholderConfig,
 } from './integrations/http/json-placeholder';
 import { UserProducer } from './integrations/amqp/producers/user';
+import { RabbitMQ } from '../amqp/vhosts';
+import { WorkVHost } from '../amqp/vhosts/work-vhost';
+import { HomeVHost } from '../amqp/vhosts/home-vhost';
 
 export interface ServiceContext {
   userModel: UserModel;
@@ -16,6 +19,8 @@ export interface ServiceContext {
 export interface ContainerConfig {
   mysqlDatabase: knex;
   jsonPlaceholderConfig: JsonPlaceholderConfig;
+  homeVHost: HomeVHost;
+  workVHost: WorkVHost;
 }
 
 export class Container {
@@ -27,7 +32,7 @@ export class Container {
       jsonPlaceholderIntegration: new JsonPlaceholderIntegration(
         config.jsonPlaceholderConfig
       ),
-      userProducer: new UserProducer(),
+      userProducer: new UserProducer(config.workVHost),
     };
     this.userService = new UserService(serviceContext);
   }

@@ -2,7 +2,7 @@ export class BufferConverter {
   static converter(content: any): Buffer {
     switch (typeof content) {
       case 'object':
-        return Buffer.from(String(content));
+        return Buffer.from(JSON.stringify(content));
       case 'string':
         return Buffer.from(String(content));
       default:

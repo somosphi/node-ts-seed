@@ -1,31 +1,37 @@
 import { HomeVHost } from './vhosts/home-vhost';
 import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
 import { WorkVHost } from './vhosts/work-vhost';
-import { Container } from '../container';
 export class AMQPServer {
-  protected readonly config: RabbitMQConfig;
-  protected readonly vHosts: string[];
-  protected container: Container;
-  static readyVhosts: RabbitMQ[] = [];
+  private readonly config: RabbitMQConfig;
+  private homeVHost!: HomeVHost;
+  private workVHost!: WorkVHost;
 
-  constructor(vHosts: string[], config: RabbitMQConfig, container: Container) {
+  constructor(vHostsName: string[], config: RabbitMQConfig) {
     this.config = config;
-    this.vHosts = vHosts;
-    this.container = container;
+    this.instantiateByName(vHostsName);
   }
 
   async start() {
-    this.vHosts.map(async vHost => {
-      switch (vHost) {
+    await this.homeVHost.init();
+    await this.workVHost.init();
+  }
+
+  getHomeVHost(): HomeVHost {
+    return this.homeVHost;
+  }
+
+  getWorkVHost(): WorkVHost {
+    return this.workVHost;
+  }
+
+  private instantiateByName(vHostNames: string[]) {
+    vHostNames.map(vHostName => {
+      switch (vHostName) {
         case 'home':
-          const homeVHost = new HomeVHost(vHost, this.config);
-          await homeVHost.init();
-          AMQPServer.readyVhosts.push(homeVHost);
+          this.homeVHost = new HomeVHost(vHostName, this.config);
           break;
         case 'work':
-          const workVHost = new WorkVHost(vHost, this.config);
-          await workVHost.init();
-          AMQPServer.readyVhosts.push(workVHost);
+          this.workVHost = new WorkVHost(vHostName, this.config);
           break;
       }
     });
