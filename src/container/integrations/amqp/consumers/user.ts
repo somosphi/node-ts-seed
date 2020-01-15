@@ -1,5 +1,9 @@
-import { RabbitMQInjection } from '../../../../amqp/decorator';
 import { Consumer } from './consumer';
+import { RabbitMQ } from '../../../../amqp/vhosts';
+import { Container } from '../../..';
 
-@RabbitMQInjection('home')
-export class UserConsumer implements Consumer {}
+export class UserConsumer extends Consumer {
+  constructor(vHost: RabbitMQ, container: Container) {
+    super(vHost, container);
+  }
+}
