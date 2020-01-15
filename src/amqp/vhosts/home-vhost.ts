@@ -16,7 +16,7 @@ export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
 
   loadConsumers(): void {
     if (this.container) {
-      this.consumers = [new UserConsumer('user.created', this.container)];
+      this.consumers = [new UserConsumer('user.find', this.container)];
     } else {
       throw new Error(
         `Can not initialize consumers from '${this.vHost}' vhost because container is null`
