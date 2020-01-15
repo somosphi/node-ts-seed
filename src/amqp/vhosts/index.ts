@@ -21,7 +21,7 @@ export abstract class RabbitMQ {
     this.vHost = vHost;
   }
 
-  async init() {
+  async init(): Promise<void> {
     try {
       this.connection = await connect(this.connectionConfig());
       logger.info(`RabbitMQ connection established on vhost - ${this.vHost}
@@ -41,7 +41,7 @@ export abstract class RabbitMQ {
     routingKey: string,
     message: object,
     additionalParams?: Options.Publish
-  ) {
+  ): void {
     try {
       this.channel.publish(
         exchange || '',
@@ -73,7 +73,7 @@ export abstract class RabbitMQ {
     this.connection.on('error', () => this.reconnect());
   }
 
-  private reconnect() {
+  private reconnect(): void {
     delete this.channel;
     delete this.connection;
     logger.warn(
