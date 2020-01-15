@@ -1,4 +1,3 @@
-import { RabbitMQInjection } from '../../../../amqp/decorator';
 import { Producer } from './producer';
 import { logger } from '../../../../logger';
 import { RabbitMQ } from '../../../../amqp/vhosts';

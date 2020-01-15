@@ -1,7 +1,9 @@
-import { Consumer } from './consumer';
+import { Container } from '../container';
+import { Consumer } from './consumers/consumer';
 
 export interface RabbitMQConsumer {
-  vHostName: string;
-  //consumers: Consumer[];
+  container?: Container;
+  consumers: Consumer[];
   loadConsumers(): void;
+  startConsumers(container: Container): void;
 }

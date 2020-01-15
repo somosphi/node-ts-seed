@@ -9,4 +9,8 @@ export class BufferConverter {
         return Buffer.from('');
     }
   }
+
+  static convertToJson(content: Buffer): any {
+    return JSON.parse(content.toString());
+  }
 }

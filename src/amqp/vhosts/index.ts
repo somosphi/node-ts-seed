@@ -3,11 +3,11 @@ import { logger } from '../../logger';
 import { BufferConverter } from '../buffer-converter';
 
 export interface RabbitMQConfig {
-  rabbitMQProtocol: string;
-  rabbitMQHost: string;
-  rabbitMQPort: number;
-  rabbitMQUsername: string;
-  rabbitMQPassword: string;
+  protocol: string;
+  host: string;
+  port: number;
+  username: string;
+  password: string;
 }
 
 export abstract class RabbitMQ {
@@ -56,11 +56,11 @@ export abstract class RabbitMQ {
 
   private connectionConfig(): Options.Connect {
     return {
-      hostname: this.config.rabbitMQHost,
-      username: this.config.rabbitMQUsername,
-      password: this.config.rabbitMQPassword,
-      protocol: this.config.rabbitMQProtocol,
-      port: this.config.rabbitMQPort,
+      hostname: this.config.host,
+      username: this.config.username,
+      password: this.config.password,
+      protocol: this.config.protocol,
+      port: this.config.port,
       vhost: this.vHost,
     };
   }
