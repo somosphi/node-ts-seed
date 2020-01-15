@@ -1,16 +1,16 @@
-import { HomeVHost } from './vhosts/home-vhost';
+import { HomeVHost } from './vhosts/home';
 import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
-import { WorkVHost } from './vhosts/work-vhost';
+import { WorkVHost } from './vhosts/work';
 import { Container } from '../container';
 import { RabbitMQConsumer } from './rabbitmq-consumer';
 
-export interface VHosts {
+export interface VHostMap {
   home: HomeVHost;
   work: WorkVHost;
 }
 
 export class AMQPServer {
-  vhosts: VHosts;
+  vhosts: VHostMap;
 
   constructor(config: RabbitMQConfig) {
     this.vhosts = {

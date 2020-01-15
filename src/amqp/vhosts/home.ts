@@ -1,4 +1,4 @@
-import { RabbitMQ, RabbitMQConfig } from '../vhosts/index';
+import { RabbitMQ, RabbitMQConfig } from './index';
 import { RabbitMQConsumer } from '../rabbitmq-consumer';
 import { Container } from '../../container';
 import { UserConsumer } from '../consumers/user';
