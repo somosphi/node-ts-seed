@@ -46,11 +46,6 @@ export class UserService {
     }
   }
 
-  async notifyMesage(id: string) {
-    const { name, username, emailAddress } = await this.findById(id);
-    this.userProducer.send({ id, name, username, emailAddress });
-  }
-
   async fetchFromJsonPlaceholder(): Promise<string[]> {
     const jsonPlaceholderUsers = await this.jsonPlaceholderIntegration.getUsers();
 
