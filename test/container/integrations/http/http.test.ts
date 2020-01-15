@@ -1,5 +1,5 @@
-import { HttpIntegration } from '../../../src/container/integrations/http';
-import { expect } from '../../helpers';
+import { HttpIntegration } from '../../../../src/container/integrations/http/http';
+import { expect } from '../../../helpers';
 
 class TestHttpIntegration extends HttpIntegration {
   getInstance() {
