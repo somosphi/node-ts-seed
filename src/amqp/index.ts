@@ -1,6 +1,7 @@
 import { HomeVHost } from './vhosts/home-vhost';
 import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
 import { WorkVHost } from './vhosts/work-vhost';
+import { Container } from '../container';
 export class AMQPServer {
   private readonly config: RabbitMQConfig;
   private homeVHost!: HomeVHost;
@@ -22,6 +23,10 @@ export class AMQPServer {
 
   getWorkVHost(): WorkVHost {
     return this.workVHost;
+  }
+
+  startAllConsumers(container: Container): void {
+    this.homeVHost.startConsumers(container);
   }
 
   private instantiateByName(vHostNames: string[]) {

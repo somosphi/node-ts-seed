@@ -82,6 +82,8 @@ export class Application {
       workVHost: this.amqpServer.getWorkVHost(),
     });
 
+    this.amqpServer.startAllConsumers(container);
+
     if (process.argv.includes(this.bashFlag)) {
       this.bash = await this.initBash(container);
       process.exit(0);
