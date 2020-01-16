@@ -1,4 +1,4 @@
-import { Options, Channel, Connection, connect } from 'amqplib';
+import amqplib, { Options, Channel, Connection } from 'amqplib';
 import { logger } from '../../logger';
 import { BufferConverter } from '../buffer-converter';
 
@@ -23,7 +23,7 @@ export abstract class RabbitMQ {
 
   async init(): Promise<void> {
     try {
-      this.connection = await connect(this.connectionConfig());
+      this.connection = await amqplib.connect(this.connectionConfig());
       logger.info(`RabbitMQ connection established on vhost - ${this.vHost}
         `);
       this.handleOnError();
