@@ -213,7 +213,7 @@ describe('RabbitMQ', () => {
       testVhost.reconnect();
       expect(testVhost.getChannel()).to.be.undefined;
     });
-    it('should delete channel prop', () => {
+    it('should delete connection prop', () => {
       const testVhost = new TestVHost('test', config);
       testVhost.reconnect();
       expect(testVhost.getConnection()).to.be.undefined;
@@ -221,6 +221,7 @@ describe('RabbitMQ', () => {
     it('should call init method after 5000ms', () => {
       const testVhost = new TestVHost('test', config);
       testVhost.reconnect();
+      sandbox.assert.notCalled(fnInit);
       clock.tick(5100);
       sandbox.assert.calledOnce(fnInit);
     });
