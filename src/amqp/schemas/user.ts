@@ -1,5 +1,5 @@
-import joi from 'joi';
+import Joi from '@hapi/joi';
 
-export const findUserSchema = joi.object({
-  id: joi.string().required(),
+export const findUserSchema = Joi.object({
+  id: Joi.string().required(),
 });
