@@ -1,10 +1,10 @@
-import joi from 'joi';
+import Joi from '@hapi/joi';
 import { ValidationError } from '../../errors';
 
-export const validatorMiddleware = (schema: joi.Schema) => <T>(
+export const validatorMiddleware = (schema: Joi.Schema) => <T>(
   message: any
 ): T => {
-  const validation = joi.validate(message, schema, {
+  const validation = schema.validate(message, {
     abortEarly: false,
     stripUnknown: true,
     allowUnknown: true,
