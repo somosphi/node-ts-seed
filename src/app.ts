@@ -11,6 +11,7 @@ export interface AppConfig {
   httpPort: number;
   httpBodyLimit: string;
   jsonPlaceholderUrl: string;
+  rabbitMQEnabled: string;
   rabbitMQProtocol: string;
   rabbitMQHost: string;
   rabbitMQPort: number;
@@ -50,6 +51,7 @@ export class Application {
       httpPort,
       httpBodyLimit,
       jsonPlaceholderUrl,
+      rabbitMQEnabled,
       rabbitMQProtocol,
       rabbitMQHost,
       rabbitMQPort,
@@ -67,10 +69,12 @@ export class Application {
       password: rabbitMQPassword,
     };
 
-    this.amqpServer = new AMQPServer(rabbitMQConfig);
+    this.amqpServer = new AMQPServer(
+      rabbitMQConfig,
+      rabbitMQEnabled === 'true'
+    );
 
     await this.amqpServer.start();
-    logger.info(`AMQP server started`);
 
     const container = new Container({
       mysqlDatabase,

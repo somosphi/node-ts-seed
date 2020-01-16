@@ -14,6 +14,7 @@ const application = new Application({
   httpBodyLimit: process.env.HTTP_BODY_LIMIT || '10kb',
   jsonPlaceholderUrl:
     process.env.JSON_PLACEHOLDER_URL || 'https://jsonplaceholder.typicode.com',
+  rabbitMQEnabled: process.env.RABBITMQ_ENABLED || 'false',
   rabbitMQProtocol: process.env.RABBITMQ_PROTOCOL || 'amqp',
   rabbitMQHost: process.env.RABBITMQ_HOST || 'localhost',
   rabbitMQPort: parseInt(process.env.RABBITMQ_PORT || '5672', 10),
