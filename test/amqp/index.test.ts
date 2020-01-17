@@ -1,10 +1,7 @@
-import amqplib, { Channel, Message } from 'amqplib';
-import { sinon, expect } from '../helpers';
+import amqplib from 'amqplib';
+import { sinon } from '../helpers';
 import { RabbitMQ, RabbitMQConfig } from '../../src/amqp/vhosts';
 import { AMQPServer } from '../../src/amqp/index';
-import { Consumer } from '../../src/amqp/consumers/consumer';
-import { HomeVHost } from '../../src/amqp/vhosts/home';
-import { WorkVHost } from '../../src/amqp/vhosts/work';
 import { Container } from '../../src/container';
 
 const rabbitMQConfig: RabbitMQConfig = {
@@ -19,18 +16,18 @@ const testContainer = new Container({
   jsonPlaceholderConfig: {},
 });
 let connection: any;
-let fnHomeVhostInit: any;
-let fnWorkVhostInit: any;
-let fnHomeVhostStartConsumers: any;
+let fnTestVhostInit: any;
+let fnNoConsumerVhostInit: any;
+let fnTestVhostStartConsumers: any;
 
 const sandbox = sinon.createSandbox();
 
 describe('AMQPServer', () => {
 
   beforeEach(() => {
-    fnHomeVhostInit = sandbox.stub();
-    fnWorkVhostInit = sandbox.stub();
-    fnHomeVhostStartConsumers = sandbox.stub();
+    fnTestVhostInit = sandbox.stub();
+    fnNoConsumerVhostInit = sandbox.stub();
+    fnTestVhostStartConsumers = sandbox.stub();
 
     connection = {
       createChannel: sandbox.stub(),
@@ -40,22 +37,22 @@ describe('AMQPServer', () => {
       .callsFake(() => connection);
   });
 
-  class TestHomeVHost extends HomeVHost {
+  class TestVHost extends RabbitMQ {
     async init(): Promise<void> {
-      fnHomeVhostInit();
+      fnTestVhostInit();
     }
     startConsumers(container: Container): void {
-      fnHomeVhostStartConsumers();
+      fnTestVhostStartConsumers();
     }
   }
-  class TestWorkVHost extends WorkVHost {
+  class TestNoConsumerVHost extends RabbitMQ {
     async init(): Promise<void> {
-      fnWorkVhostInit();
+      fnNoConsumerVhostInit();
     }
   }
   const testVhosts = {
-    home: new TestHomeVHost('home', rabbitMQConfig),
-    work: new TestWorkVHost('work', rabbitMQConfig),
+    test: new TestVHost('test', rabbitMQConfig),
+    testNoConsumer: new TestNoConsumerVHost('noConsumer', rabbitMQConfig),
   };
   class TestAMQPServer extends AMQPServer {
     setVHosts(vhosts: any) {
@@ -68,16 +65,16 @@ describe('AMQPServer', () => {
       amqpServer.setVHosts(testVhosts);
 
       await amqpServer.start();
-      sandbox.assert.calledOnce(fnHomeVhostInit);
-      sandbox.assert.calledOnce(fnWorkVhostInit);
+      sandbox.assert.calledOnce(fnTestVhostInit);
+      sandbox.assert.calledOnce(fnNoConsumerVhostInit);
     });
     it('should not init vhosts when server is disabled', async () => {
       const amqpServer = new TestAMQPServer(rabbitMQConfig, false);
       amqpServer.setVHosts(testVhosts);
 
       await amqpServer.start();
-      sandbox.assert.notCalled(fnHomeVhostInit);
-      sandbox.assert.notCalled(fnWorkVhostInit);
+      sandbox.assert.notCalled(fnTestVhostInit);
+      sandbox.assert.notCalled(fnNoConsumerVhostInit);
     });
   });
   describe('startAllConsumers', () => {
@@ -86,14 +83,14 @@ describe('AMQPServer', () => {
       amqpServer.setVHosts(testVhosts);
 
       await amqpServer.startAllConsumers(testContainer);
-      sandbox.assert.calledOnce(fnHomeVhostStartConsumers);
+      sandbox.assert.calledOnce(fnTestVhostStartConsumers);
     });
     it('should not start consumers when server is disabled', async () => {
       const amqpServer = new TestAMQPServer(rabbitMQConfig, false);
       amqpServer.setVHosts(testVhosts);
 
       await amqpServer.startAllConsumers(testContainer);
-      sandbox.assert.notCalled(fnHomeVhostStartConsumers);
+      sandbox.assert.notCalled(fnTestVhostStartConsumers);
     });
   });
 

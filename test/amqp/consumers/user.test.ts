@@ -1,7 +1,7 @@
 import { Channel, Message } from 'amqplib';
 import { sinon } from '../../helpers';
 import { UserConsumer, FindUserMessage } from '../../../src/amqp/consumers/user';
-import { Container } from '../../../src/container';
+import { Container, ContainerConfig } from '../../../src/container';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
 import * as errors from '../../../src/errors';
 import validatorMiddleware from '../../../src/amqp/middleware/validator';
@@ -11,29 +11,32 @@ const buffer = BufferConverter.converter({ id: 123 });
 // @ts-ignore
 const consumeMessage: ConsumeMessage = { content: buffer };
 let fnFindUserById: any;
-let fnFindById: any;
 let testContainer: Container;
+let serviceContext: any;
 
-sandbox.stub(validatorMiddleware, 'validation')
-  // @ts-ignore
-  .callsFake(() => (() => 'test'));
+class TestContainer extends Container {
+  constructor(config: ContainerConfig, userService: any) {
+    super(config);
+    this.userService = userService;
+  }
+}
 
 describe('UserConsumer', () => {
 
   beforeEach(() => {
-    fnFindById = sandbox.stub();
+    serviceContext = {
+      findById: sandbox.stub()
+    };
     fnFindUserById = sandbox.stub();
-    testContainer = new Container({
+    sandbox.stub(validatorMiddleware, 'validation')
       // @ts-ignore
-      jsonPlaceholderConfig: {},
-      userService: {
-        findById: (id: string) => {
-          console.log('AAAAAAAAAAAA');
+      .callsFake(() => (() => 'test'));
 
-          fnFindById(id);
-        }
-      },
-    });
+    testContainer = new TestContainer(
+      // @ts-ignore
+      { jsonPlaceholderConfig: {} },
+      serviceContext,
+    );
   });
 
   describe('messageHandler', () => {
@@ -51,14 +54,11 @@ describe('UserConsumer', () => {
 
   describe('findUserById', () => {
     class TestUserConsumer extends UserConsumer {
-      setContainer(container) {
-        this.container = container;
-      }
     }
     it('should validate message and call findUserById', async () => {
       const testUserConsumer = new TestUserConsumer('user.find', testContainer);
       await testUserConsumer.findUserById({ id: '123' });
-      sandbox.assert.calledOnce(fnFindById);
+      sandbox.assert.calledWith(serviceContext.findById, '123');
     });
   });
 
