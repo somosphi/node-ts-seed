@@ -31,3 +31,5 @@ The folder "lib" should be commited in master branch to install this package usi
 ```sh
 $ npm run lint
 ```
+### RabbitMQ Config
+- Wiki: https://github.com/somosphi/node-ts-seed/wiki/RabbitMQ-Configuration 
