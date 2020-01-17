@@ -1,9 +1,7 @@
-import amqplib, { Channel, Message } from 'amqplib';
-import { sinon, expect } from '../../helpers';
-import { RabbitMQ, RabbitMQConfig } from '../../../src/amqp/vhosts';
-import { BufferConverter } from '../../../src/amqp/buffer-converter';
+import { Channel, Message } from 'amqplib';
+import { sinon } from '../../helpers';
 import { Consumer } from '../../../src/amqp/consumers/consumer';
-import { Container, ContainerConfig } from '../../../src/container';
+import { Container } from '../../../src/container';
 import * as errors from '../../../src/errors';
 
 let fnMessageHandler: any;
@@ -12,13 +10,13 @@ let fnOnConsumeError: any;
 let channel: Channel;
 class TestCodedError extends errors.CodedError {}
 
-const sandbox = sinon.createSandbox();
 const container = new Container({
   // @ts-ignore
   jsonPlaceholderConfig: {},
 });
 // @ts-ignore
 const message: Message = { message: 123 };
+const sandbox = sinon.createSandbox();
 
 describe('Consumer', () => {
 
@@ -72,7 +70,6 @@ describe('Consumer', () => {
       sandbox.assert.calledOnce(fnMessageHandler);
       sandbox.assert.calledWith(fnMessageHandler, message);
       sandbox.assert.calledOnce(fnOnConsumeError);
-      sandbox.assert.calledWith(fnOnConsumeError, error, channel, message);
       sandbox.assert.calledOnce(fnAck);
       sandbox.assert.calledWith(fnAck, message);
     });

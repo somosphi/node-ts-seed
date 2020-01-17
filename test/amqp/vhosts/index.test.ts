@@ -11,7 +11,7 @@ const connConfig = {
   port: 3000,
   vhost: 'test',
 }
-const config: RabbitMQConfig = {
+const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
   host: '123',
   port: 123,
@@ -66,7 +66,7 @@ describe('RabbitMQ', () => {
     }
 
     it('should connect, handleErros and create channel', async () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
 
       await testVhost.init();
       // @ts-ignore
@@ -76,7 +76,7 @@ describe('RabbitMQ', () => {
       sandbox.assert.calledOnce(connection.createChannel);
     });
     it('should throw error', async () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
 
       fnConnectionConfig.throws();
       await testVhost.init();
@@ -103,7 +103,7 @@ describe('RabbitMQ', () => {
     }
 
     it('should call publish method', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
 
       testVhost.send(
         'test',
@@ -119,7 +119,7 @@ describe('RabbitMQ', () => {
     });
 
     it('should throw error', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       fnPublish.throws();
 
       expect(
@@ -156,18 +156,18 @@ describe('RabbitMQ', () => {
     }
 
     it('should call connection.on thrice', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.handleOnError();
       sandbox.assert.calledThrice(fnConnectionOn);
     });
 
     it('should call reconnect twice', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.handleOnError();
       sandbox.assert.calledTwice(fnRecconect);
     });
     it('should call connection.on with args', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.handleOnError();
       sandbox.assert.calledWith(
         fnConnectionOn,
@@ -209,17 +209,17 @@ describe('RabbitMQ', () => {
     }
 
     it('should delete channel prop', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.reconnect();
       expect(testVhost.getChannel()).to.be.undefined;
     });
     it('should delete connection prop', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.reconnect();
       expect(testVhost.getConnection()).to.be.undefined;
     });
     it('should call init method after 5000ms', () => {
-      const testVhost = new TestVHost('test', config);
+      const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.reconnect();
       sandbox.assert.notCalled(fnInit);
       clock.tick(5100);

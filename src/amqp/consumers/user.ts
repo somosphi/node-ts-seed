@@ -2,7 +2,7 @@ import { Consumer } from './consumer';
 import { Container } from '../../container';
 import { ConsumeMessage } from 'amqplib';
 import { BufferConverter } from '../buffer-converter';
-import { validatorMiddleware } from '../middleware/validator';
+import validatorMiddleware from '../middleware/validator';
 import { findUserSchema } from '../schemas/user';
 import { logger } from '../../logger';
 import { User } from '../../container/models/user';
@@ -18,7 +18,7 @@ export class UserConsumer extends Consumer {
 
   messageHandler(message: ConsumeMessage | null) {
     if (message) {
-      const messageContent: FindUserMessage = validatorMiddleware(
+      const messageContent: FindUserMessage = validatorMiddleware.validation(
         findUserSchema
       )<FindUserMessage>(BufferConverter.convertToJson(message.content));
       this.findUserById(messageContent);
