@@ -1,4 +1,4 @@
-import { Options, Channel, Connection, connect } from 'amqplib';
+import amqplib, { Options, Channel, Connection } from 'amqplib';
 import { logger } from '../../logger';
 import { BufferConverter } from '../buffer-converter';
 
@@ -23,7 +23,7 @@ export abstract class RabbitMQ {
 
   async init(): Promise<void> {
     try {
-      this.connection = await connect(this.connectionConfig());
+      this.connection = await amqplib.connect(this.connectionConfig());
       logger.info(`RabbitMQ connection established on vhost - ${this.vHost}
         `);
       this.handleOnError();
@@ -54,7 +54,7 @@ export abstract class RabbitMQ {
     }
   }
 
-  private connectionConfig(): Options.Connect {
+  protected connectionConfig(): Options.Connect {
     return {
       hostname: this.config.host,
       username: this.config.username,
@@ -65,7 +65,7 @@ export abstract class RabbitMQ {
     };
   }
 
-  private handleOnError() {
+  protected handleOnError() {
     this.connection.on('blocked', reason => {
       logger.error(`Connection blocked because of ${reason}`);
     });
@@ -73,7 +73,7 @@ export abstract class RabbitMQ {
     this.connection.on('error', () => this.reconnect());
   }
 
-  private reconnect(): void {
+  protected reconnect(): void {
     delete this.channel;
     delete this.connection;
     logger.warn(

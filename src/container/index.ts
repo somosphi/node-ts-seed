@@ -23,7 +23,7 @@ export interface ContainerConfig {
 }
 
 export class Container {
-  readonly userService: UserService;
+  userService: UserService;
 
   constructor(config: ContainerConfig) {
     const serviceContext: ServiceContext = {

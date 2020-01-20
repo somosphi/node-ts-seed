@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi';
 import { ValidationError } from '../../errors';
 
-export const validatorMiddleware = (schema: Joi.Schema) => <T>(
+export const validation = (schema: Joi.Schema) => <T>(
   message: any
 ): T => {
   const validation = schema.validate(message, {
@@ -16,3 +16,5 @@ export const validatorMiddleware = (schema: Joi.Schema) => <T>(
 
   return validation.value as T;
 };
+
+export default { validation };
