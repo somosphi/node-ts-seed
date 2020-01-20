@@ -9,8 +9,8 @@ describe('RabbitMQManager', () => {
   beforeEach(() => {
     channel = {
       bindQueue: sandbox.stub(),
-      assertExchange: sandbox.stub(),
-      assertQueue: sandbox.stub(),
+      assertExchange: sandbox.stub().callsFake((exchange) => ({ exchange })),
+      assertQueue: sandbox.stub().callsFake((queue) => ({ queue })),
     };
   });
 
@@ -18,7 +18,7 @@ describe('RabbitMQManager', () => {
     it('should call channel.bindQueue', async () => {
       // @ts-ignore
       const rabbitMQManager = new RabbitMQManager(channel);
-      rabbitMQManager.bindQueue(
+      await rabbitMQManager.bindQueue(
         'queueName',
         'routingKeyName',
         'pattern',
@@ -37,7 +37,7 @@ describe('RabbitMQManager', () => {
     it('should call channel.assertExchange', async () => {
       // @ts-ignore
       const rabbitMQManager = new RabbitMQManager(channel);
-      rabbitMQManager.createExchange(
+      await rabbitMQManager.createExchange(
         'exchangeName',
         'type',
         { arguments: 123 },
@@ -54,7 +54,7 @@ describe('RabbitMQManager', () => {
     it('should call channel.assertQueue', async () => {
       // @ts-ignore
       const rabbitMQManager = new RabbitMQManager(channel);
-      rabbitMQManager.createQueue('queueName', { arguments: 123 });
+      await rabbitMQManager.createQueue('queueName', { arguments: 123 });
       sandbox.assert.calledWith(
         channel.assertQueue,
         'queueName',
