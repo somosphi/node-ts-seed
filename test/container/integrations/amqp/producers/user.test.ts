@@ -1,6 +1,6 @@
 import { Options } from 'amqplib';
-import { sinon } from '../../../helpers';
-import { UserProducer } from '../../../../src/container/integrations/amqp/producers/user';
+import { sinon } from '../../../../helpers';
+import { UserProducer } from '../../../../../src/container/integrations/amqp/producers/user';
 
 const sandbox = sinon.createSandbox();
 
