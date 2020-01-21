@@ -1,12 +1,13 @@
 import { Channel, Message } from 'amqplib';
+import { SinonStub } from 'sinon';
 import { sinon } from '../../helpers';
 import { Consumer } from '../../../src/amqp/consumers/consumer';
 import { Container } from '../../../src/container';
 import * as errors from '../../../src/errors';
 
-let fnMessageHandler: any;
-let fnAck: any;
-let fnOnConsumeError: any;
+let fnMessageHandler: SinonStub;
+let fnAck: SinonStub;
+let fnOnConsumeError: SinonStub;
 let channel: Channel;
 class TestCodedError extends errors.CodedError {}
 

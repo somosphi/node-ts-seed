@@ -1,16 +1,16 @@
-import { Channel, Message } from 'amqplib';
+
+import { SinonStub } from 'sinon';
 import { sinon } from '../../helpers';
 import { UserConsumer, FindUserMessage } from '../../../src/amqp/consumers/user';
 import { Container, ContainerConfig } from '../../../src/container';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
-import * as errors from '../../../src/errors';
 import validatorMiddleware from '../../../src/amqp/middleware/validator';
 
 const sandbox = sinon.createSandbox();
 const buffer = BufferConverter.converter({ id: 123 });
 // @ts-ignore
 const consumeMessage: ConsumeMessage = { content: buffer };
-let fnFindUserById: any;
+let fnFindUserById: SinonStub;
 let testContainer: Container;
 let serviceContext: any;
 

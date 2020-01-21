@@ -1,4 +1,5 @@
 import amqplib from 'amqplib';
+import { SinonStub } from 'sinon';
 import { sinon, expect } from '../../helpers';
 import { RabbitMQ, RabbitMQConfig } from '../../../src/amqp/vhosts';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
@@ -21,13 +22,13 @@ const rabbitMQConfig: RabbitMQConfig = {
 const sandbox = sinon.createSandbox();
 let clock: any;
 
-let fnConnectionConfig: any;
-let fnHandleOnError: any;
-let fnRecconect: any;
 let connection: any;
-let fnPublish: any;
-let fnConnectionOn: any;
-let fnInit: any;
+let fnConnectionConfig: SinonStub;
+let fnHandleOnError: SinonStub;
+let fnRecconect: SinonStub;
+let fnPublish: SinonStub;
+let fnConnectionOn: SinonStub;
+let fnInit: SinonStub;
 
 describe('RabbitMQ', () => {
 
