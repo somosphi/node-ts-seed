@@ -1,4 +1,4 @@
-import joi from 'joi';
+import Joi from '@hapi/joi';
 
 export abstract class CodedError extends Error {
   code: string;
@@ -45,7 +45,7 @@ export class ResourceNotFoundError extends CodedError {
 }
 
 export class ValidationError extends DetailedCodedError {
-  constructor(details: joi.ValidationErrorItem[]) {
+  constructor(details: Joi.ValidationErrorItem[]) {
     super('VALIDATION_FAILED', 'Invalid request data', details);
   }
 }

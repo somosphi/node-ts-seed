@@ -1,20 +1,23 @@
-import joi from 'joi';
+import Joi from '@hapi/joi';
 import { Request, Response, NextFunction } from 'express';
 import { ValidationError } from '../../errors';
 
-export const validatorMiddleware = (schema: joi.Schema) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    const validation = joi.validate(req, schema, {
-      abortEarly: false,
-      stripUnknown: true,
-      allowUnknown: true,
-    });
+export const validatorMiddleware = (schema: Joi.Schema) => (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const validation = schema.validate(req, {
+    abortEarly: false,
+    stripUnknown: true,
+    allowUnknown: true,
+  });
 
-    if (validation.error) {
-      return next(new ValidationError(validation.error.details));
-    }
+  if (validation.error) {
+    return next(new ValidationError(validation.error.details));
+  }
 
-    Object.assign(req, validation.value);
+  Object.assign(req, validation.value);
 
-    return next();
-  };
+  return next();
+};

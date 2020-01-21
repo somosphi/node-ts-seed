@@ -4,12 +4,21 @@ import { Container } from './container';
 import { Worker } from './worker';
 import { logger } from './logger';
 import { Bash } from './bash';
-
+import { AMQPServer } from './amqp';
+import { RabbitMQConfig } from './amqp/vhosts';
 export interface AppConfig {
   knexConfig: knex.Config;
   httpPort: number;
   httpBodyLimit: string;
   jsonPlaceholderUrl: string;
+  rabbitMQEnabled: string;
+  rabbitMQProtocol: string;
+  rabbitMQHost: string;
+  rabbitMQPort: number;
+  rabbitMQUsername: string;
+  rabbitMQPassword: string;
+  rabbitMQHomeVHost: string;
+  rabbitMQWorkVHost: string;
 }
 
 export class Application {
@@ -18,6 +27,7 @@ export class Application {
   protected httpServer?: HttpServer;
   protected worker?: Worker;
   protected bash?: Bash;
+  protected amqpServer?: AMQPServer;
 
   constructor(config: AppConfig) {
     this.config = config;
@@ -41,16 +51,41 @@ export class Application {
       httpPort,
       httpBodyLimit,
       jsonPlaceholderUrl,
+      rabbitMQEnabled,
+      rabbitMQProtocol,
+      rabbitMQHost,
+      rabbitMQPort,
+      rabbitMQUsername,
+      rabbitMQPassword,
     } = this.config;
 
     const mysqlDatabase = knex(knexConfig);
+
+    const rabbitMQConfig: RabbitMQConfig = {
+      protocol: rabbitMQProtocol,
+      host: rabbitMQHost,
+      port: rabbitMQPort,
+      username: rabbitMQUsername,
+      password: rabbitMQPassword,
+    };
+
+    this.amqpServer = new AMQPServer(
+      rabbitMQConfig,
+      rabbitMQEnabled === 'true'
+    );
+
+    await this.amqpServer.start();
 
     const container = new Container({
       mysqlDatabase,
       jsonPlaceholderConfig: {
         baseURL: jsonPlaceholderUrl,
       },
+      homeVHost: this.amqpServer.vhosts.home,
+      workVHost: this.amqpServer.vhosts.work,
     });
+
+    this.amqpServer.startAllConsumers(container);
 
     if (process.argv.includes(this.bashFlag)) {
       this.bash = await this.initBash(container);
