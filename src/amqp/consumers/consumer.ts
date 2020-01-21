@@ -3,7 +3,7 @@ import { ConsumeMessage, Channel, Message } from 'amqplib';
 import { logger } from '../../logger';
 
 export abstract class Consumer {
-  queue: string;
+  readonly queue: string;
   protected readonly container: Container;
 
   constructor(queue: string, container: Container) {
@@ -11,7 +11,7 @@ export abstract class Consumer {
     this.container = container;
   }
 
-  messageHandler(message: ConsumeMessage | null): void {}
+  abstract messageHandler(message: ConsumeMessage | null): void;
 
   onConsume(channel: Channel) {
     return (message: Message | null): void => {
