@@ -3,6 +3,7 @@ import { sinon } from '../helpers';
 import { RabbitMQ, RabbitMQConfig } from '../../src/amqp/vhosts';
 import { AMQPServer } from '../../src/amqp/index';
 import { Container } from '../../src/container';
+import { SinonStub } from 'sinon';
 
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
@@ -16,9 +17,9 @@ const testContainer = new Container({
   jsonPlaceholderConfig: {},
 });
 let connection: any;
-let fnTestVhostInit: any;
-let fnNoConsumerVhostInit: any;
-let fnTestVhostStartConsumers: any;
+let fnTestVhostInit: SinonStub;
+let fnNoConsumerVhostInit: SinonStub;
+let fnTestVhostStartConsumers: SinonStub;
 
 const sandbox = sinon.createSandbox();
 
