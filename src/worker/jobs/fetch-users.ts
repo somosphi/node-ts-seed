@@ -1,14 +1,14 @@
 import { Cron } from './cron';
 import { UserService } from '../../container/services/user';
 import { logger } from '../../logger';
-import { Container } from '../../container';
+import { AppContainer } from '../../container';
 
 export class FetchUsersJob extends Cron {
   protected userService: UserService;
 
-  constructor(container: Container) {
+  constructor(container: AppContainer) {
     super('*/60 * * * * *');
-    this.userService = container.userService;
+    this.userService = container.get<UserService>(UserService);
   }
 
   protected async handler(): Promise<void> {

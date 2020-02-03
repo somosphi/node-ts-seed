@@ -1,27 +1,41 @@
 import knex from 'knex';
+import { Container, provide } from 'injection';
 import { UserModel } from './models/user';
 import { UserService } from './services/user';
-import { JsonPlaceholderIntegration, JsonPlaceholderConfig } from './integrations/json-placeholder';
-
-export interface ServiceContext {
-  userModel: UserModel;
-  jsonPlaceholderIntegration: JsonPlaceholderIntegration;
-}
-
+import {
+  JsonPlaceholderIntegration,
+  JsonPlaceholderConfig,
+} from './integrations/json-placeholder';
 export interface ContainerConfig {
   mysqlDatabase: knex;
   jsonPlaceholderConfig: JsonPlaceholderConfig;
 }
 
-export class Container {
-  readonly userService: UserService;
+export interface Config {
+  name: string;
+  value: any;
+}
 
-  constructor(config: ContainerConfig) {
-    const serviceContext: ServiceContext = {
-      userModel: new UserModel(config.mysqlDatabase),
-      jsonPlaceholderIntegration: new JsonPlaceholderIntegration(config.jsonPlaceholderConfig),
-    };
+export class AppContainer extends Container {
+  constructor(protected config: ContainerConfig) {
+    super();
+    this.loadProviders().forEach(provider => this.bind(provider));
+    this.loadConfigs().forEach(config =>
+      this.registerObject(config.name, config.value)
+    );
+  }
 
-    this.userService = new UserService(serviceContext);
+  protected loadProviders(): Function[] {
+    return [UserService, UserModel, JsonPlaceholderIntegration];
+  }
+
+  loadConfigs(): Config[] {
+    return [
+      { name: 'mysqlDatabase', value: this.config.mysqlDatabase },
+      {
+        name: 'jsonPlaceholderConfig',
+        value: this.config.jsonPlaceholderConfig,
+      },
+    ];
   }
 }

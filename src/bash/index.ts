@@ -1,6 +1,6 @@
 import readline from 'readline';
 import { logger } from '../logger';
-import { Container } from '../container';
+import { AppContainer } from '../container';
 import { Command } from './commands/command';
 import { FetchUsersCommand } from './commands/fetch-users';
 
@@ -8,16 +8,14 @@ export class Bash {
   protected commands: Command[];
   protected readline: readline.Interface;
 
-  constructor(container: Container) {
-    this.commands = [
-      new FetchUsersCommand(container),
-    ];
+  constructor(container: AppContainer) {
+    this.commands = [new FetchUsersCommand(container)];
     this.readline = readline.createInterface({
       input: process.stdin,
       output: process.stdout,
       terminal: false,
     });
-    this.readline.on('line', async (line) => {
+    this.readline.on('line', async line => {
       await this.execute(line.trim().split(' '));
     });
   }

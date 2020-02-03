@@ -1,15 +1,14 @@
 import { Worker } from '../../src/worker';
-import { Container } from '../../src/container';
+import { AppContainer } from '../../src/container';
 import { expect } from '../helpers';
 
 describe('Worker', () => {
+  const container = new AppContainer({
+    // @ts-ignore
+    jsonPlaceholderConfig: {},
+  });
   describe('#jobConunt', () => {
     it('return length by jobs', () => {
-      const container = new Container({
-        // @ts-ignore
-        jsonPlaceholderConfig: {},
-      });
-
       const worker = new Worker(container);
       const result: number = worker.jobsCount;
 
@@ -20,11 +19,6 @@ describe('Worker', () => {
 
   describe('#start', () => {
     it('start jobs', () => {
-      const container = new Container({
-        // @ts-ignore
-        jsonPlaceholderConfig: {},
-      });
-
       const worker = new Worker(container);
       worker.start();
     });
@@ -32,11 +26,6 @@ describe('Worker', () => {
 
   describe('#stop', () => {
     it('stop jobs', () => {
-      const container = new Container({
-        // @ts-ignore
-        jsonPlaceholderConfig: {},
-      });
-
       const worker = new Worker(container);
       worker.stop();
     });
