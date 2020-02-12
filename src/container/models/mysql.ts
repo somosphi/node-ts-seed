@@ -23,7 +23,7 @@ export abstract class MySQLModel<T> {
     return this.database.transaction.bind(this.database);
   }
 
-  async create(data: Object, trx?: Transaction): Promise<string> {
+  async create(data: Record<string, any>, trx?: Transaction): Promise<string> {
     const [createdId] = await this.transactionable(trx).insert(data);
     return createdId.toString();
   }
@@ -41,7 +41,7 @@ export abstract class MySQLModel<T> {
     return result > 0;
   }
 
-  async updateById(id: string, data: Object, trx?: Transaction): Promise<boolean> {
+  async updateById(id: string, data: Record<string, any>, trx?: Transaction): Promise<boolean> {
     const result = await this.transactionable(trx).where('id', id).update(data);
     return result > 0;
   }

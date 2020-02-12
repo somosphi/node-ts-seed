@@ -29,7 +29,7 @@ export class AMQPServer {
           return vHost.init();
         })
       );
-      logger.info(`RabbitMQ: AMQP server started`);
+      logger.info('RabbitMQ: AMQP server started');
     }
   }
 

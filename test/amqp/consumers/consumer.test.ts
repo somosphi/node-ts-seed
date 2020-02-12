@@ -9,7 +9,7 @@ let fnMessageHandler: SinonStub;
 let fnAck: SinonStub;
 let fnOnConsumeError: SinonStub;
 let channel: Channel;
-class TestCodedError extends errors.CodedError {}
+class TestCodedError extends errors.CodedError { }
 
 const container = new Container({
   // @ts-ignore
@@ -30,7 +30,7 @@ describe('Consumer', () => {
       ack: (message: Message) => {
         fnAck(message);
       },
-    }
+    };
   });
 
   describe('onConsume', () => {

@@ -6,7 +6,7 @@ export abstract class Cron extends CronJob implements WorkerJob {
   protected abstract handler(): Promise<void>;
   running: boolean;
 
-  constructor(cronTime: string, timezone: string = 'Etc/UTC') {
+  constructor(cronTime: string, timezone = 'Etc/UTC') {
     super(
       cronTime,
       () => this.execute(),
@@ -25,7 +25,7 @@ export abstract class Cron extends CronJob implements WorkerJob {
     logger.error(err);
   }
 
-  protected async execute(): Promise<void>  {
+  protected async execute(): Promise<void> {
     try {
       await this.handler();
     } catch (err) {

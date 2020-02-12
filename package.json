@@ -9,7 +9,8 @@
     "test": "mocha --exit --opts test/mocha.opts -r ts-node/register 'test/**/*.test.ts'",
     "test:watch": "mocha --watch --watch-extensions ts --opts test/mocha.opts -r ts-node/register 'test/**/*.test.ts'",
     "cover": "nyc report --reporter=text-lcov | coveralls",
-    "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
+    "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts' 'test/**/*.ts'",
     "migrate:latest": "knex migrate:latest"
   },
   "author": "Phi <somosphi.com>",
@@ -56,11 +57,13 @@
     "@types/supertest": "^2.0.8",
     "@types/winston": "^2.4.4",
     "@types/amqplib": "^0.5.13",
+    "@typescript-eslint/eslint-plugin": "^2.19.2",
+    "@typescript-eslint/parser": "^2.19.2",
     "chai": "^4.2.0",
     "coveralls": "^3.0.6",
-    "eslint": "^5.16.0",
-    "eslint-config-airbnb-base": "^12.0.2",
-    "eslint-plugin-import": "^2.18.2",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
     "mocha": "^5.2.0",
     "nock": "^10.0.6",
     "nodemon": "^1.19.4",
@@ -68,9 +71,6 @@
     "prettier": "1.19.1",
     "sinon": "^7.4.2",
     "ts-node": "^8.4.1",
-    "tslint": "^5.20.0",
-    "tslint-config-airbnb": "^5.11.1",
-    "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.6.3"
   }
 }
