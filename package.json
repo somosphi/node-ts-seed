@@ -10,7 +10,7 @@
     "test:watch": "mocha --watch --watch-extensions ts --opts test/mocha.opts -r ts-node/register 'test/**/*.test.ts'",
     "cover": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint 'src/**/*.ts' 'test/**/*.ts'",
-    "lint:fix": "eslint 'src/**/*.ts' 'test/**/*.ts'",
+    "lint:fix": "eslint --fix 'src/**/*.ts' 'test/**/*.ts'",
     "migrate:latest": "knex migrate:latest"
   },
   "author": "Phi <somosphi.com>",
