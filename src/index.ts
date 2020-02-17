@@ -3,12 +3,11 @@ import * as dotenv from 'dotenv';
 import { logger } from './logger';
 import { Application } from './app';
 import knexConfig from '../knexfile';
-import Knex from 'knex';
 
 dotenv.config();
 
 const application = new Application({
-  knexConfig: knexConfig as Knex.Config,
+  knexConfig,
   httpPort:
     (process.env.HTTP_PORT && parseInt(process.env.HTTP_PORT, 10)) || 3002,
   httpBodyLimit: process.env.HTTP_BODY_LIMIT || '10kb',
