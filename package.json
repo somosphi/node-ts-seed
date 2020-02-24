@@ -6,11 +6,27 @@
   "scripts": {
     "dev": "nodemon --watch './src/**/*.ts' --exec 'ts-node' ./src/index.ts",
     "build": "rm -rf lib && tsc",
-    "test": "mocha --exit --opts test/mocha.opts -r ts-node/register 'test/**/*.test.ts'",
-    "test:watch": "mocha --watch --watch-extensions ts --opts test/mocha.opts -r ts-node/register 'test/**/*.test.ts'",
+    "test": "nyc mocha --exit --opts test/mocha.opts 'test/**/*.test.ts'",
+    "test:watch": "mocha --watch --watch-extensions ts --opts test/mocha.opts 'test/**/*.test.ts'",
     "cover": "nyc report --reporter=text-lcov | coveralls",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
     "migrate:latest": "knex migrate:latest"
+  },
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "all": true,
+    "include": [
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "**/*.d.ts"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
+    ]
   },
   "author": "Phi <somosphi.com>",
   "license": "MIT",
