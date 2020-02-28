@@ -11,7 +11,7 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
-}
+};
 const testContainer = new Container({
   // @ts-ignore
   jsonPlaceholderConfig: {},

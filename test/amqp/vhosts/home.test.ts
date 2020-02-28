@@ -19,7 +19,7 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
-}
+};
 let fnLoadConsumers: SinonStub;
 let fnConsume: SinonStub;
 let fnOnConsume: SinonStub;
@@ -44,7 +44,7 @@ describe('HomeVHost', () => {
       let error;
       try {
         homeVhost.loadConsumers();
-      } catch(err) {
+      } catch (err) {
         error = err;
       }
       expect(homeVhost.consumers.length).to.be.equals(0);
@@ -57,9 +57,9 @@ describe('HomeVHost', () => {
       class TestConsumer extends Consumer {
         onConsume() {
           fnOnConsume();
-          return () => {};
+          return () => { };
         }
-        messageHandler() {}
+        messageHandler() { }
       }
 
       const consumerOne = new TestConsumer('queue.test', testContainer);

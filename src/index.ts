@@ -2,13 +2,12 @@ import './apm';
 import * as dotenv from 'dotenv';
 import { logger } from './logger';
 import { Application } from './app';
+import knexConfig from '../knexfile';
 
 dotenv.config();
 
-const knexfile = require('../knexfile');
-
 const application = new Application({
-  knexConfig: knexfile,
+  knexConfig,
   httpPort:
     (process.env.HTTP_PORT && parseInt(process.env.HTTP_PORT, 10)) || 3000,
   httpBodyLimit: process.env.HTTP_BODY_LIMIT || '10kb',

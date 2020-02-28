@@ -11,14 +11,14 @@ const connConfig = {
   protocol: 'test',
   port: 3000,
   vhost: 'test',
-}
+};
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
   host: '123',
   port: 123,
   username: 'user',
   password: 'pass',
-}
+};
 const sandbox = sinon.createSandbox();
 let clock: any;
 
@@ -99,7 +99,7 @@ describe('RabbitMQ', () => {
           ) => {
             fnPublish(exchange, routingKey, message);
           },
-        }
+        };
       }
     }
 
@@ -146,7 +146,7 @@ describe('RabbitMQ', () => {
             fn();
             fnConnectionOn(action, fn);
           },
-        }
+        };
       }
       handleOnError() {
         super.handleOnError();
