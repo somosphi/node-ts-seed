@@ -52,8 +52,7 @@
     "moment-timezone": "^0.5.25",
     "mysql2": "^1.7.0",
     "supertest": "^4.0.2",
-    "typescript-rabbitmq": "0.0.8",
-    "winston": "^3.2.1"
+    "typescript-rabbitmq": "0.0.8"
   },
   "devDependencies": {
     "@types/amqplib": "^0.5.13",
