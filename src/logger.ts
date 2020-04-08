@@ -11,7 +11,7 @@ const {
   ExpressLogger,
   AxiosLogger,
 } = init({
-  PROJECT_NAME: 'bff-payly-mobile',
+  PROJECT_NAME: 'node-ts-seed',
   // @ts-ignore
   LOG_LEVEL: process.env.LOGGER_LEVEL || 'info',
   STREAMS: [{
