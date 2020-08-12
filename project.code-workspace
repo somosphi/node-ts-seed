@@ -20,6 +20,7 @@
     "[typescript]": {
       "editor.defaultFormatter": "esbenp.prettier-vscode",
       "editor.formatOnSave": true
-    }
+    },
+    "window.title": "${dirty}${folderName}${separator}${appName}"
   }
 }
