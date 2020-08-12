@@ -15,7 +15,6 @@ class TestFetchUsersJob extends FetchUsersJob {
 describe('FetchUsers', () => {
   describe('#handler', () => {
     it('should call fetch users from jsonPlaceholder', async () => {
-
       const fetchUsers = [
         {
           id: 1,
@@ -70,7 +69,7 @@ describe('FetchUsers', () => {
       };
 
       const container = {
-        userService: userServiceFake,
+        get: sinon.fake.returns(userServiceFake),
       };
 
       // @ts-ignore
@@ -84,13 +83,15 @@ describe('FetchUsers', () => {
   describe('#errorHandler', () => {
     it('should call super errorHandler method error', async () => {
       const cronErrHandler = sinon.fake.returns(undefined);
-
+      const container = {
+        get: sinon.fake.returns(undefined),
+      };
       // @ts-ignore
       const originalErrHandler = Cron.prototype.errorHandler;
       // @ts-ignore
       Cron.prototype.errorHandler = cronErrHandler;
       // @ts-ignore
-      const fetchUsersJob = new TestFetchUsersJob({});
+      const fetchUsersJob = new TestFetchUsersJob(container);
 
       const err = new Error();
       await fetchUsersJob.errorHandler(err);

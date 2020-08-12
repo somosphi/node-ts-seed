@@ -1,19 +1,23 @@
 import { Consumer } from './consumer';
-import { Container } from '../../container';
+import { AppContainer } from '../../container';
 import { ConsumeMessage } from 'amqplib';
 import { BufferConverter } from '../buffer-converter';
 import validatorMiddleware from '../middleware/validator';
 import { findUserSchema } from '../schemas/user';
 import { logger } from '../../logger';
 import { User } from '../../container/models/user';
+import { UserService } from '../../container/services/user';
 
 export interface FindUserMessage {
   id: string;
 }
 
 export class UserConsumer extends Consumer {
-  constructor(queue: string, container: Container) {
+  protected readonly userService: UserService;
+
+  constructor(queue: string, container: AppContainer) {
     super(queue, container);
+    this.userService = this.container.get<UserService>(UserService);
   }
 
   messageHandler(message: ConsumeMessage | null) {
@@ -26,9 +30,7 @@ export class UserConsumer extends Consumer {
   }
 
   async findUserById(findUserMessage: FindUserMessage) {
-    const user: User = await this.container.userService.findById(
-      findUserMessage.id
-    );
+    const user: User = await this.userService.findById(findUserMessage.id);
     logger.info(JSON.stringify(user));
   }
 }

@@ -1,7 +1,7 @@
 import { HomeVHost } from './vhosts/home';
 import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
 import { WorkVHost } from './vhosts/work';
-import { Container } from '../container';
+import { AppContainer } from '../container';
 import { RabbitMQConsumer } from './rabbitmq-consumer';
 import { logger } from '../logger';
 
@@ -33,7 +33,7 @@ export class AMQPServer {
     }
   }
 
-  startAllConsumers(container: Container): void {
+  startAllConsumers(container: AppContainer): void {
     if (this.enabled) {
       Object.values(this.vhosts).map((vHost: RabbitMQConsumer) => {
         if (vHost.startConsumers) vHost.startConsumers(container);

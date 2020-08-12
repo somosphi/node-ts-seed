@@ -1,7 +1,7 @@
+import { inject, provide } from 'injection';
 import { UserModel, User } from '../models/user';
 import { JsonPlaceholderIntegration } from '../integrations/http/json-placeholder';
 import { UserSources } from '../../enums';
-import { ServiceContext } from '..';
 import { ResourceNotFoundError } from '../../errors';
 import { UserProducer } from '../integrations/amqp/producers/user';
 
@@ -9,18 +9,16 @@ export interface CreateUserDTO {
   name: string;
   username: string;
   emailAddress: string;
-  source: UserSources;
+  source: string;
 }
-export class UserService {
-  protected readonly userModel: UserModel;
-  protected readonly jsonPlaceholderIntegration: JsonPlaceholderIntegration;
-  protected readonly userProducer: UserProducer;
 
-  constructor(context: ServiceContext) {
-    this.userModel = context.userModel;
-    this.jsonPlaceholderIntegration = context.jsonPlaceholderIntegration;
-    this.userProducer = context.userProducer;
-  }
+@provide()
+export class UserService {
+  constructor(
+    @inject() protected userModel: UserModel,
+    @inject() protected jsonPlaceholderIntegration: JsonPlaceholderIntegration,
+    @inject() protected userProducer: UserProducer
+  ) {}
 
   all(): Promise<User[]> {
     return this.userModel.all();

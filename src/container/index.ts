@@ -1,4 +1,5 @@
 import knex from 'knex';
+import { Container } from 'injection';
 import { UserModel } from './models/user';
 import { UserService } from './services/user';
 import {
@@ -9,12 +10,6 @@ import { UserProducer } from './integrations/amqp/producers/user';
 import { WorkVHost } from '../amqp/vhosts/work';
 import { HomeVHost } from '../amqp/vhosts/home';
 
-export interface ServiceContext {
-  userModel: UserModel;
-  jsonPlaceholderIntegration: JsonPlaceholderIntegration;
-  userProducer: UserProducer;
-}
-
 export interface ContainerConfig {
   mysqlDatabase: knex;
   jsonPlaceholderConfig: JsonPlaceholderConfig;
@@ -22,17 +17,32 @@ export interface ContainerConfig {
   workVHost: WorkVHost;
 }
 
-export class Container {
-  userService: UserService;
+export interface Config {
+  name: string;
+  value: any;
+}
 
-  constructor(config: ContainerConfig) {
-    const serviceContext: ServiceContext = {
-      userModel: new UserModel(config.mysqlDatabase),
-      jsonPlaceholderIntegration: new JsonPlaceholderIntegration(
-        config.jsonPlaceholderConfig
-      ),
-      userProducer: new UserProducer(config.workVHost),
-    };
-    this.userService = new UserService(serviceContext);
+export class AppContainer extends Container {
+  constructor(protected config: ContainerConfig) {
+    super();
+    this.loadProviders().forEach(provider => this.bind(provider));
+    this.loadConfigs().forEach(config =>
+      this.registerObject(config.name, config.value)
+    );
+  }
+
+  protected loadProviders(): Function[] {
+    return [UserService, UserModel, JsonPlaceholderIntegration, UserProducer];
+  }
+
+  loadConfigs(): Config[] {
+    return [
+      { name: 'mysqlDatabase', value: this.config.mysqlDatabase },
+      {
+        name: 'jsonPlaceholderConfig',
+        value: this.config.jsonPlaceholderConfig,
+      },
+      { name: 'workVHost', value: this.config.workVHost },
+    ];
   }
 }

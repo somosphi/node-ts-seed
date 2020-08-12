@@ -5,11 +5,11 @@ import { RabbitMQConfig } from '../../../src/amqp/vhosts';
 import { HomeVHost } from '../../../src/amqp/vhosts/home';
 import { UserConsumer } from '../../../src/amqp/consumers/user';
 import { Consumer } from '../../../src/amqp/consumers/consumer';
-import { Container } from '../../../src/container';
+import { AppContainer } from '../../../src/container';
 
 const sandbox = sinon.createSandbox();
 
-const testContainer = new Container({
+const testContainer = new AppContainer({
   // @ts-ignore
   jsonPlaceholderConfig: {},
 });
@@ -19,13 +19,12 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
-}
+};
 let fnLoadConsumers: SinonStub;
 let fnConsume: SinonStub;
 let fnOnConsume: SinonStub;
 
 describe('HomeVHost', () => {
-
   beforeEach(() => {
     fnLoadConsumers = sandbox.stub();
     fnConsume = sandbox.stub();
@@ -44,7 +43,7 @@ describe('HomeVHost', () => {
       let error;
       try {
         homeVhost.loadConsumers();
-      } catch(err) {
+      } catch (err) {
         error = err;
       }
       expect(homeVhost.consumers.length).to.be.equals(0);

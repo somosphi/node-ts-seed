@@ -1,15 +1,12 @@
-import { Container } from '../../container';
+import { AppContainer } from '../../container';
 import { ConsumeMessage, Channel, Message } from 'amqplib';
 import { logger } from '../../logger';
 
 export abstract class Consumer {
-  readonly queue: string;
-  protected readonly container: Container;
-
-  constructor(queue: string, container: Container) {
-    this.queue = queue;
-    this.container = container;
-  }
+  constructor(
+    readonly queue: string,
+    protected readonly container: AppContainer
+  ) {}
 
   abstract messageHandler(message: ConsumeMessage | null): void;
 

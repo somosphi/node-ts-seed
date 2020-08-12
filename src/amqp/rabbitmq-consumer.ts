@@ -1,9 +1,9 @@
-import { Container } from '../container';
+import { AppContainer } from '../container';
 import { Consumer } from './consumers/consumer';
 
 export interface RabbitMQConsumer {
-  container?: Container;
+  container?: AppContainer;
   consumers: Consumer[];
   loadConsumers(): void;
-  startConsumers(container: Container): void;
+  startConsumers(container: AppContainer): void;
 }

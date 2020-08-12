@@ -1,5 +1,5 @@
 import { FetchUsersJob } from './jobs/fetch-users';
-import { Container } from '../container';
+import { AppContainer } from '../container';
 
 export interface WorkerJob {
   running: boolean;
@@ -10,10 +10,8 @@ export interface WorkerJob {
 export class Worker {
   protected jobs: WorkerJob[];
 
-  constructor(container: Container) {
-    this.jobs = [
-      new FetchUsersJob(container),
-    ];
+  constructor(container: AppContainer) {
+    this.jobs = [new FetchUsersJob(container)];
   }
 
   get jobsCount(): number {
@@ -21,14 +19,10 @@ export class Worker {
   }
 
   start(): void {
-    this.jobs
-      .filter(job => !job.running)
-      .forEach(job => job.start());
+    this.jobs.filter(job => !job.running).forEach(job => job.start());
   }
 
   stop(): void {
-    this.jobs
-      .filter(job => job.running)
-      .forEach(job => job.stop());
+    this.jobs.filter(job => job.running).forEach(job => job.stop());
   }
 }

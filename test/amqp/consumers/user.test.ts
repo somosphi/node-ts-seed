@@ -1,68 +1,55 @@
-
-import { SinonStub } from 'sinon';
-import { sinon } from '../../helpers';
-import { UserConsumer, FindUserMessage } from '../../../src/amqp/consumers/user';
-import { Container, ContainerConfig } from '../../../src/container';
+import { sinon, assert } from '../../helpers';
+import { UserConsumer } from '../../../src/amqp/consumers/user';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
 import validatorMiddleware from '../../../src/amqp/middleware/validator';
+import { findUserSchema } from '../../../src/amqp/schemas/user';
 
-const sandbox = sinon.createSandbox();
-const buffer = BufferConverter.converter({ id: 123 });
-// @ts-ignore
-const consumeMessage: ConsumeMessage = { content: buffer };
-let fnFindUserById: SinonStub;
-let testContainer: Container;
-let serviceContext: any;
-
-class TestContainer extends Container {
-  constructor(config: ContainerConfig, userService: any) {
-    super(config);
-    this.userService = userService;
-  }
-}
+let testContainer: any;
 
 describe('UserConsumer', () => {
-
   beforeEach(() => {
-    serviceContext = {
-      findById: sandbox.stub()
+    testContainer = {
+      get: (className: Function) => testContainer[className.name],
     };
-    fnFindUserById = sandbox.stub();
-    sandbox.stub(validatorMiddleware, 'validation')
-      // @ts-ignore
-      .callsFake(() => (() => 'test'));
-
-    testContainer = new TestContainer(
-      // @ts-ignore
-      { jsonPlaceholderConfig: {} },
-      serviceContext,
-    );
   });
 
   describe('messageHandler', () => {
-    class TestUserConsumer extends UserConsumer {
-      async findUserById(findUserMessage: FindUserMessage) {
-        fnFindUserById(findUserMessage);
-      }
-    }
     it('should validate message and call findUserById', () => {
-      const testUserConsumer = new TestUserConsumer('user.find', testContainer);
+      testContainer.UserService = {};
+
+      const message = 'test';
+      const fakeFunctionMessage = sinon.fake.returns(message);
+
+      const fakeFindUserById = sinon.fake.resolves({});
+      const validatorStub = sinon
+        .stub(validatorMiddleware, 'validation')
+        // @ts-ignore
+        .returns(fakeFunctionMessage);
+
+      const testUserConsumer = new UserConsumer('user.find', testContainer);
+      testUserConsumer.findUserById = fakeFindUserById;
+
+      const buffer = BufferConverter.converter({ id: 123 });
+      // @ts-ignore
+      const consumeMessage: ConsumeMessage = { content: buffer };
       testUserConsumer.messageHandler(consumeMessage);
-      sandbox.assert.calledWith(fnFindUserById, 'test');
+
+      assert(validatorStub.calledOnceWith(findUserSchema));
+      assert(fakeFindUserById.calledOnceWith(message));
     });
   });
 
   describe('findUserById', () => {
-    class TestUserConsumer extends UserConsumer {
-    }
     it('should validate message and call findUserById', async () => {
-      const testUserConsumer = new TestUserConsumer('user.find', testContainer);
-      await testUserConsumer.findUserById({ id: '123' });
-      sandbox.assert.calledWith(serviceContext.findById, '123');
-    });
-  });
+      testContainer.UserService = {
+        findById: sinon.fake.resolves({ yolo: 'yolo' }),
+      };
 
-  afterEach(() => {
-    sandbox.restore();
+      const testUserConsumer = new UserConsumer('user.find', testContainer);
+      const data = { id: '123' };
+
+      await testUserConsumer.findUserById(data);
+      assert(testContainer.UserService.findById.calledOnceWith(data.id));
+    });
   });
 });

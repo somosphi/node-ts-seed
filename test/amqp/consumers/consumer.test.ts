@@ -2,7 +2,7 @@ import { Channel, Message } from 'amqplib';
 import { SinonStub } from 'sinon';
 import { sinon } from '../../helpers';
 import { Consumer } from '../../../src/amqp/consumers/consumer';
-import { Container } from '../../../src/container';
+import { AppContainer } from '../../../src/container';
 import * as errors from '../../../src/errors';
 
 let fnMessageHandler: SinonStub;
@@ -11,7 +11,7 @@ let fnOnConsumeError: SinonStub;
 let channel: Channel;
 class TestCodedError extends errors.CodedError {}
 
-const container = new Container({
+const container = new AppContainer({
   // @ts-ignore
   jsonPlaceholderConfig: {},
 });
@@ -20,7 +20,6 @@ const message: Message = { message: 123 };
 const sandbox = sinon.createSandbox();
 
 describe('Consumer', () => {
-
   beforeEach(() => {
     fnMessageHandler = sandbox.stub();
     fnAck = sandbox.stub();
@@ -30,12 +29,12 @@ describe('Consumer', () => {
       ack: (message: Message) => {
         fnAck(message);
       },
-    }
+    };
   });
 
   describe('onConsume', () => {
     class TestConsumer extends Consumer {
-      constructor(queue: string, container: Container) {
+      constructor(queue: string, container: AppContainer) {
         super(queue, container);
       }
       messageHandler(message: Message) {

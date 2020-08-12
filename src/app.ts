@@ -1,6 +1,6 @@
 import knex from 'knex';
 import { HttpServer } from './http';
-import { Container } from './container';
+import { AppContainer } from './container';
 import { Worker } from './worker';
 import { logger } from './logger';
 import { Bash } from './bash';
@@ -33,7 +33,7 @@ export class Application {
     this.config = config;
   }
 
-  protected async initBash(container: Container): Promise<Bash> {
+  protected async initBash(container: AppContainer): Promise<Bash> {
     const bash = new Bash(container);
     const bashCommandIndex = process.argv.indexOf(this.bashFlag);
     const signatures = process.argv.slice(bashCommandIndex + 1);
@@ -76,7 +76,7 @@ export class Application {
 
     await this.amqpServer.start();
 
-    const container = new Container({
+    const container = new AppContainer({
       mysqlDatabase,
       jsonPlaceholderConfig: {
         baseURL: jsonPlaceholderUrl,
