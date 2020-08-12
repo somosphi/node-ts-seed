@@ -1,14 +1,20 @@
 import knex from 'knex';
-import { Container, provide } from 'injection';
+import { Container } from 'injection';
 import { UserModel } from './models/user';
 import { UserService } from './services/user';
 import {
   JsonPlaceholderIntegration,
   JsonPlaceholderConfig,
-} from './integrations/json-placeholder';
+} from './integrations/http/json-placeholder';
+import { UserProducer } from './integrations/amqp/producers/user';
+import { WorkVHost } from '../amqp/vhosts/work';
+import { HomeVHost } from '../amqp/vhosts/home';
+
 export interface ContainerConfig {
   mysqlDatabase: knex;
   jsonPlaceholderConfig: JsonPlaceholderConfig;
+  homeVHost: HomeVHost;
+  workVHost: WorkVHost;
 }
 
 export interface Config {
@@ -26,7 +32,7 @@ export class AppContainer extends Container {
   }
 
   protected loadProviders(): Function[] {
-    return [UserService, UserModel, JsonPlaceholderIntegration];
+    return [UserService, UserModel, JsonPlaceholderIntegration, UserProducer];
   }
 
   loadConfigs(): Config[] {
@@ -36,6 +42,7 @@ export class AppContainer extends Container {
         name: 'jsonPlaceholderConfig',
         value: this.config.jsonPlaceholderConfig,
       },
+      { name: 'workVHost', value: this.config.workVHost },
     ];
   }
 }

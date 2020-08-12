@@ -9,16 +9,18 @@ describe('UserService', () => {
     it('should return user model all result', async () => {
       const payload: User[] = [];
 
-      const userModel = {
-        all: sinon.fake.resolves(payload),
+      const providers = {
+        userModel: {
+          all: sinon.fake.resolves(payload),
+        },
       };
 
       // @ts-ignore
-      const userService = new UserService(userModel);
+      const userService = new UserService(...Object.values(providers));
       const result = await userService.all();
 
       expect(result).to.be.eql(payload);
-      assert(userModel.all.calledOnce);
+      assert(providers.userModel.all.calledOnce);
     });
   });
 
@@ -26,16 +28,18 @@ describe('UserService', () => {
     it('should return user', async () => {
       const payload = { message: 'Ola mundo' };
 
-      const userModel = {
-        getById: sinon.fake.resolves(payload),
+      const providers = {
+        userModel: {
+          getById: sinon.fake.resolves(payload),
+        },
       };
 
       // @ts-ignore
-      const userService = new UserService(userModel);
+      const userService = new UserService(...Object.values(providers));
       const user = await userService.findById('1');
 
       expect(user).to.be.eql(payload);
-      assert(userModel.getById.calledOnceWith('1'));
+      assert(providers.userModel.getById.calledOnceWith('1'));
     });
 
     it('should throw resource not found error', async () => {
@@ -84,11 +88,13 @@ describe('UserService', () => {
         transaction: sinon.fake((cb: Function) => cb()),
       };
 
-      const userService = new UserService(
-        // @ts-ignore
+      const providers = {
         userModel,
-        jsonPlaceholderIntegration
-      );
+        jsonPlaceholderIntegration,
+      };
+
+      // @ts-ignore
+      const userService = new UserService(...Object.values(providers));
       const fetchedIds = await userService.fetchFromJsonPlaceholder();
 
       expect(fetchedIds).to.be.eql(['1']);

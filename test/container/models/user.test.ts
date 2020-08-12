@@ -1,9 +1,15 @@
 import { UserModel, User } from '../../../src/container/models/user';
 import { assert, expect, sinon } from '../../helpers';
 import { UserSources } from '../../../src/enums';
+import { Transaction } from 'knex';
+
+class UserModelTest extends UserModel {
+  transactionable(trx?: Transaction) {
+    return super.transactionable(trx);
+  }
+}
 
 describe('UserModel', () => {
-
   describe('#getTableName', () => {
     it('should use table "users"', () => {
       // @ts-ignore
@@ -27,7 +33,7 @@ describe('UserModel', () => {
       ];
 
       // @ts-ignore
-      const userModel = new UserModel();
+      const userModel = new UserModelTest();
       const sourceQuery = sinon.fake.resolves(payload);
       const emailsQuery = sinon.fake.returns({ where: sourceQuery });
 
@@ -36,8 +42,10 @@ describe('UserModel', () => {
       });
 
       const emails = ['fulano@gmail.com'];
-      const users = await userModel
-        .getByEmailsWithSource(emails, UserSources.JsonPlaceholder);
+      const users = await userModel.getByEmailsWithSource(
+        emails,
+        UserSources.JsonPlaceholder
+      );
 
       expect(users).to.be.eql(payload);
       assert(sourceQuery.calledOnceWith('source', UserSources.JsonPlaceholder));

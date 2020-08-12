@@ -1,14 +1,23 @@
 import { inject, provide } from 'injection';
 import { UserModel, User } from '../models/user';
-import { JsonPlaceholderIntegration } from '../integrations/json-placeholder';
+import { JsonPlaceholderIntegration } from '../integrations/http/json-placeholder';
 import { UserSources } from '../../enums';
 import { ResourceNotFoundError } from '../../errors';
+import { UserProducer } from '../integrations/amqp/producers/user';
+
+export interface CreateUserDTO {
+  name: string;
+  username: string;
+  emailAddress: string;
+  source: string;
+}
 
 @provide()
 export class UserService {
   constructor(
     @inject() protected userModel: UserModel,
-    @inject() protected jsonPlaceholderIntegration: JsonPlaceholderIntegration
+    @inject() protected jsonPlaceholderIntegration: JsonPlaceholderIntegration,
+    @inject() protected userProducer: UserProducer
   ) {}
 
   all(): Promise<User[]> {
@@ -21,6 +30,18 @@ export class UserService {
       throw new ResourceNotFoundError();
     }
     return user;
+  }
+
+  async create(userDto: CreateUserDTO): Promise<string> {
+    const { name, username, emailAddress } = userDto;
+
+    try {
+      const id = await this.userModel.create(userDto);
+      this.userProducer.send({ id, name, username, emailAddress });
+      return id;
+    } catch (err) {
+      throw new Error(`Error creating user - reason: ${err}`);
+    }
   }
 
   async fetchFromJsonPlaceholder(): Promise<string[]> {
