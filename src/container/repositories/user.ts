@@ -1,5 +1,5 @@
 import { Transaction } from 'knex';
-import { MySQLModel } from './mysql';
+import { Repository } from './repository';
 import { UserSources } from '../../enums';
 import { provide } from 'injection';
 
@@ -14,7 +14,7 @@ export interface User {
 }
 
 @provide()
-export class UserModel extends MySQLModel<User> {
+export class UserRepository extends Repository<User> {
   getTableName(): string {
     return 'users';
   }

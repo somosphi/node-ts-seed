@@ -1,7 +1,7 @@
 import knex, { QueryBuilder, Transaction } from 'knex';
 import { inject } from 'injection';
 
-export abstract class MySQLModel<T> {
+export abstract class Repository<T> {
   protected abstract getTableName(): string;
 
   constructor(@inject('mysqlDatabase') protected database: knex) {}

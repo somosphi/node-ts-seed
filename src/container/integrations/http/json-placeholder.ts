@@ -1,5 +1,6 @@
-import { inject, provide } from 'injection';
+import { provide } from 'injection';
 import { HttpIntegration } from './http';
+import { env } from '../../../env';
 
 export interface JsonPlaceholderConfig {
   baseURL: string;
@@ -30,9 +31,9 @@ export interface JsonPlaceholderUser {
 
 @provide()
 export class JsonPlaceholderIntegration extends HttpIntegration {
-  constructor(@inject('jsonPlaceholderConfig') options: JsonPlaceholderConfig) {
+  constructor() {
     super({
-      baseURL: options.baseURL,
+      baseURL: env.jsonPlaceholderUrl,
     });
   }
 
