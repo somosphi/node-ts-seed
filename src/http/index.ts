@@ -8,6 +8,7 @@ import { UserController } from './controllers/user';
 import { errorHandlerMiddleware } from './middlewares/errorHandler';
 import { NotFoundError } from '../errors';
 import { BaseController } from './controllers/controller';
+import { expressLogger } from '../logger';
 
 export interface HttpServerConfig {
   port: number;
@@ -108,6 +109,9 @@ export class HttpServer {
         }
       });
     });
+
+    app.use(expressLogger.onError.bind(expressLogger));
+    app.use(expressLogger.onSuccess.bind(expressLogger));
 
     app.use(
       '*',
