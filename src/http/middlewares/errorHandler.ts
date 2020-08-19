@@ -4,12 +4,6 @@ import { logger } from '../../logger';
 
 export const errorHandlerMiddleware =
   (err: any, req: Request, res: Response, next: NextFunction) => {
-    if (err instanceof CodedError) {
-      logger.warn(err);
-    } else {
-      logger.error(err);
-    }
-
     if (err instanceof NotFoundError || err instanceof ResourceNotFoundError) {
       res.status(404).send(err);
       return next();
@@ -22,6 +16,8 @@ export const errorHandlerMiddleware =
       });
       return next();
     }
+
+    logger.error(err);
 
     res.status(500).send({
       code: 'UNEXPECTED_ERROR',
