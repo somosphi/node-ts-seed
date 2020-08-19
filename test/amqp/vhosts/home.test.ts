@@ -58,6 +58,7 @@ describe('HomeVHost', () => {
           fnOnConsume();
           return () => {};
         }
+
         messageHandler() {}
       }
 
@@ -66,6 +67,7 @@ describe('HomeVHost', () => {
 
       class TestHomeVhost extends HomeVHost {
         channel: Channel;
+
         constructor(vHost: string, config: RabbitMQConfig) {
           super(vHost, config);
           this.channel = {
@@ -75,6 +77,7 @@ describe('HomeVHost', () => {
             },
           };
         }
+
         loadConsumers() {
           this.consumers = [consumerOne, consumerTwo];
           fnLoadConsumers();

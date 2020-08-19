@@ -10,12 +10,14 @@ import { RabbitMQConfig } from './amqp/vhosts';
 
 export class Application {
   protected readonly bashFlag = '--bash';
-  protected httpServer?: HttpServer;
-  protected worker?: Worker;
-  protected bash?: Bash;
-  protected amqpServer?: AMQPServer;
 
-  constructor() {}
+  protected httpServer?: HttpServer;
+
+  protected worker?: Worker;
+
+  protected bash?: Bash;
+
+  protected amqpServer?: AMQPServer;
 
   protected async initBash(container: AppContainer): Promise<Bash> {
     const bash = new Bash(container);
@@ -80,9 +82,11 @@ export class Application {
 
   private throwEnvValidatorErrors(err: ValidationError[]) {
     err.forEach((item: ValidationError) => {
-      for (let key in item.constraints) {
-        const message = item.constraints[key];
-        throw new Error(message);
+      for (const key in item.constraints) {
+        if (key) {
+          const message = item.constraints[key];
+          throw new Error(message);
+        }
       }
     });
   }

@@ -34,12 +34,10 @@ describe('Consumer', () => {
 
   describe('onConsume', () => {
     class TestConsumer extends Consumer {
-      constructor(queue: string, container: AppContainer) {
-        super(queue, container);
-      }
       messageHandler(message: Message) {
         fnMessageHandler(message);
       }
+
       onConsumeError() {
         fnOnConsumeError();
       }

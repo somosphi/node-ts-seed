@@ -12,8 +12,11 @@ export interface RabbitMQConfig {
 
 export abstract class RabbitMQ {
   protected connection!: Connection;
+
   protected channel!: Channel;
+
   protected readonly config: RabbitMQConfig;
+
   readonly vHost: string;
 
   constructor(vHost: string, config: RabbitMQConfig) {

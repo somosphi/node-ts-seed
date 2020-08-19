@@ -16,7 +16,9 @@ export interface HttpServerConfig {
 
 export class HttpServer {
   protected app?: express.Application;
+
   protected container: AppContainer;
+
   protected config: HttpServerConfig;
 
   constructor(container: AppContainer, config: HttpServerConfig) {
@@ -100,6 +102,8 @@ export class HttpServer {
             break;
           case 'delete':
             app.delete(fullPath, jobs);
+            break;
+          default:
             break;
         }
       });

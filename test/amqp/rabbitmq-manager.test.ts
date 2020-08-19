@@ -5,12 +5,11 @@ const sandbox = sinon.createSandbox();
 let channel: any;
 
 describe('RabbitMQManager', () => {
-
   beforeEach(() => {
     channel = {
       bindQueue: sandbox.stub(),
-      assertExchange: sandbox.stub().callsFake((exchange) => ({ exchange })),
-      assertQueue: sandbox.stub().callsFake((queue) => ({ queue })),
+      assertExchange: sandbox.stub().callsFake(exchange => ({ exchange })),
+      assertQueue: sandbox.stub().callsFake(queue => ({ queue })),
     };
   });
 
@@ -37,11 +36,9 @@ describe('RabbitMQManager', () => {
     it('should call channel.assertExchange', async () => {
       // @ts-ignore
       const rabbitMQManager = new RabbitMQManager(channel);
-      await rabbitMQManager.createExchange(
-        'exchangeName',
-        'type',
-        { arguments: 123 },
-      );
+      await rabbitMQManager.createExchange('exchangeName', 'type', {
+        arguments: 123,
+      });
       sandbox.assert.calledWith(
         channel.assertExchange,
         'exchangeName',
@@ -55,11 +52,9 @@ describe('RabbitMQManager', () => {
       // @ts-ignore
       const rabbitMQManager = new RabbitMQManager(channel);
       await rabbitMQManager.createQueue('queueName', { arguments: 123 });
-      sandbox.assert.calledWith(
-        channel.assertQueue,
-        'queueName',
-        { arguments: 123 },
-      );
+      sandbox.assert.calledWith(channel.assertQueue, 'queueName', {
+        arguments: 123,
+      });
     });
   });
   afterEach(() => {

@@ -17,9 +17,9 @@ export abstract class CodedError extends Error {
 }
 
 export abstract class DetailedCodedError extends CodedError {
-  details: Object;
+  details: Record<string, any>;
 
-  constructor(code: string, message: string, details: Object) {
+  constructor(code: string, message: string, details: Record<string, any>) {
     super(code, message);
     this.details = details;
   }

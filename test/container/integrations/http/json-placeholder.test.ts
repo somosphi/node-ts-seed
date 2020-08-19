@@ -5,8 +5,8 @@ import { JsonPlaceholderIntegration } from '../../../../src/container/integratio
 describe('JsonPlaceholderIntegration', () => {
   const baseURL = 'http://localhost:1500/jsonplaceholder';
   const nockInstance = nock(baseURL);
-  
-  sinon.replace(env, "jsonPlaceholderUrl", baseURL);
+
+  sinon.replace(env, 'jsonPlaceholderUrl', baseURL);
   const jsonPlaceholderInstance = new JsonPlaceholderIntegration();
 
   describe('#getUsers', () => {
@@ -18,7 +18,7 @@ describe('JsonPlaceholderIntegration', () => {
           email: 'fuluna@aah.com',
         },
       ];
-      
+
       nockInstance.get('/users').reply(200, payload);
 
       const users = await jsonPlaceholderInstance.getUsers();

@@ -1,7 +1,7 @@
+import { Transaction } from 'knex';
 import { UserRepository, User } from '../../../src/container/repositories/user';
 import { assert, expect, sinon } from '../../helpers';
 import { UserSources } from '../../../src/enums';
-import { Transaction } from 'knex';
 
 class UserRepositoryTest extends UserRepository {
   transactionable(trx?: Transaction) {

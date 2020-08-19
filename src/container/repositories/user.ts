@@ -1,7 +1,7 @@
 import { Transaction } from 'knex';
+import { provide } from 'injection';
 import { Repository } from './repository';
 import { UserSources } from '../../enums';
-import { provide } from 'injection';
 
 export interface User {
   id: string;
@@ -24,7 +24,7 @@ export class UserRepository extends Repository<User> {
     source: UserSources,
     trx?: Transaction
   ): Promise<User[]> {
-    return await this.transactionable(trx)
+    return this.transactionable(trx)
       .whereIn('emailAddress', emails)
       .where('source', source);
   }

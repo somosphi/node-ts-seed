@@ -1,5 +1,5 @@
 import { HomeVHost } from './vhosts/home';
-import { RabbitMQConfig, RabbitMQ } from '../amqp/vhosts/index';
+import { RabbitMQConfig, RabbitMQ } from './vhosts/index';
 import { WorkVHost } from './vhosts/work';
 import { AppContainer } from '../container';
 import { RabbitMQConsumer } from './rabbitmq-consumer';
@@ -12,6 +12,7 @@ export interface VHostMap {
 
 export class AMQPServer {
   protected readonly enabled: boolean;
+
   vhosts: VHostMap;
 
   constructor(config: RabbitMQConfig, enabled: boolean) {
@@ -35,7 +36,7 @@ export class AMQPServer {
 
   startAllConsumers(container: AppContainer): void {
     if (this.enabled) {
-      Object.values(this.vhosts).map((vHost: RabbitMQConsumer) => {
+      Object.values(this.vhosts).forEach((vHost: RabbitMQConsumer) => {
         if (vHost.startConsumers) vHost.startConsumers(container);
       });
     }

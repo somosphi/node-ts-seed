@@ -17,15 +17,22 @@ export class AppContainer extends Container {
   constructor(protected config: ContainerConfig) {
     super();
     this.loadProviders().forEach(provider => this.bind(provider));
-    
+
     const configs = this.loadConfigs();
-    for (let key in configs) {
-      this.registerObject(key, configs[key]);
+    for (const key in configs) {
+      if (key) {
+        this.registerObject(key, configs[key]);
+      }
     }
   }
 
   protected loadProviders(): Function[] {
-    return [UserService, UserRepository, JsonPlaceholderIntegration, UserProducer];
+    return [
+      UserService,
+      UserRepository,
+      JsonPlaceholderIntegration,
+      UserProducer,
+    ];
   }
 
   loadConfigs(): any {

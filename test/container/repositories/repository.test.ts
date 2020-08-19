@@ -33,9 +33,10 @@ describe('Repository', () => {
 
       // @ts-ignore
       const testRepository = new TestRepository(databaseQuery);
-      testRepository.table;
+      const { table } = testRepository;
 
       assert(databaseQuery.calledOnceWith(TestRepository.tableName));
+      expect(table).to.be.eql('test');
     });
   });
 

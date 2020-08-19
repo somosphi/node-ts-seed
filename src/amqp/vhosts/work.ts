@@ -1,7 +1,3 @@
-import { RabbitMQ, RabbitMQConfig } from '.';
+import { RabbitMQ } from '.';
 
-export class WorkVHost extends RabbitMQ {
-  constructor(vHost: string, config: RabbitMQConfig) {
-    super(vHost, config);
-  }
-}
+export class WorkVHost extends RabbitMQ {}
