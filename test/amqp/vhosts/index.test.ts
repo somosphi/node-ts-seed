@@ -11,14 +11,15 @@ const connConfig = {
   protocol: 'test',
   port: 3000,
   vhost: 'test',
-}
+};
+
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
   host: '123',
   port: 123,
   username: 'user',
   password: 'pass',
-}
+};
 const sandbox = sinon.createSandbox();
 let clock: any;
 
@@ -31,7 +32,6 @@ let fnConnectionOn: SinonStub;
 let fnInit: SinonStub;
 
 describe('RabbitMQ', () => {
-
   beforeEach(() => {
     clock = sandbox.useFakeTimers();
     fnConnectionConfig = sandbox.stub().returns(connConfig);
@@ -44,23 +44,22 @@ describe('RabbitMQ', () => {
     connection = {
       createChannel: sandbox.stub(),
     };
-    sandbox.stub(amqplib, 'connect')
+    sandbox
+      .stub(amqplib, 'connect')
       // @ts-ignore
       .callsFake(() => connection);
-
   });
 
   describe('init', () => {
     class TestVHost extends RabbitMQ {
-      constructor(vHost: string, config: RabbitMQConfig) {
-        super(vHost, config);
-      }
       connectionConfig() {
         return fnConnectionConfig();
       }
+
       handleOnError() {
         fnHandleOnError();
       }
+
       reconnect() {
         fnRecconect();
       }
@@ -92,30 +91,22 @@ describe('RabbitMQ', () => {
         super(vHost, config);
         this.channel = {
           // @ts-ignore
-          publish: (
-            exchange,
-            routingKey,
-            message,
-          ) => {
+          publish: (exchange, routingKey, message) => {
             fnPublish(exchange, routingKey, message);
           },
-        }
+        };
       }
     }
 
     it('should call publish method', () => {
       const testVhost = new TestVHost('test', rabbitMQConfig);
 
-      testVhost.send(
-        'test',
-        'routingKey',
-        { message: 'test' },
-      );
+      testVhost.send('test', 'routingKey', { message: 'test' });
       sandbox.assert.calledWith(
         fnPublish,
         'test',
         'routingKey',
-        BufferConverter.converter({ message: 'test' }),
+        BufferConverter.converter({ message: 'test' })
       );
     });
 
@@ -123,16 +114,9 @@ describe('RabbitMQ', () => {
       const testVhost = new TestVHost('test', rabbitMQConfig);
       fnPublish.throws();
 
-      expect(
-        () => {
-          testVhost.send(
-            'test',
-            'routingKey',
-            { message: 'test' },
-          );
-        }
-      ).to.throws();
-
+      expect(() => {
+        testVhost.send('test', 'routingKey', { message: 'test' });
+      }).to.throws();
     });
   });
 
@@ -146,11 +130,13 @@ describe('RabbitMQ', () => {
             fn();
             fnConnectionOn(action, fn);
           },
-        }
+        };
       }
+
       handleOnError() {
         super.handleOnError();
       }
+
       reconnect() {
         fnRecconect();
       }
@@ -170,18 +156,9 @@ describe('RabbitMQ', () => {
     it('should call connection.on with args', () => {
       const testVhost = new TestVHost('test', rabbitMQConfig);
       testVhost.handleOnError();
-      sandbox.assert.calledWith(
-        fnConnectionOn,
-        'blocked',
-      );
-      sandbox.assert.calledWith(
-        fnConnectionOn,
-        'close',
-      );
-      sandbox.assert.calledWith(
-        fnConnectionOn,
-        'error',
-      );
+      sandbox.assert.calledWith(fnConnectionOn, 'blocked');
+      sandbox.assert.calledWith(fnConnectionOn, 'close');
+      sandbox.assert.calledWith(fnConnectionOn, 'error');
     });
   });
 
@@ -194,16 +171,20 @@ describe('RabbitMQ', () => {
         // @ts-ignore
         this.connection = { test: 123 };
       }
+
       // @ts-ignore
       init() {
         fnInit();
       }
+
       reconnect() {
         super.reconnect();
       }
+
       getChannel() {
         return this.channel;
       }
+
       getConnection() {
         return this.connection;
       }

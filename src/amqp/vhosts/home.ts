@@ -1,15 +1,16 @@
 import { RabbitMQ, RabbitMQConfig } from './index';
 import { RabbitMQConsumer } from '../rabbitmq-consumer';
-import { Container } from '../../container';
+import { AppContainer } from '../../container';
 import { UserConsumer } from '../consumers/user';
 import { Consumer } from '../consumers/consumer';
 import { logger } from '../../logger';
 
 export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
-  container?: Container;
+  container?: AppContainer;
+
   consumers: Consumer[] = [];
 
-  constructor(vHost: string, config: RabbitMQConfig, container?: Container) {
+  constructor(vHost: string, config: RabbitMQConfig, container?: AppContainer) {
     super(vHost, config);
     this.container = container;
   }
@@ -24,10 +25,10 @@ export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
     }
   }
 
-  startConsumers(container: Container): void {
+  startConsumers(container: AppContainer): void {
     this.container = container;
     this.loadConsumers();
-    this.consumers.map((consumer: Consumer) => {
+    this.consumers.forEach((consumer: Consumer) => {
       this.channel.consume(consumer.queue, consumer.onConsume(this.channel));
       logger.info(
         `RabbitMQ: '${this.vHost}' vhost started '${consumer.queue}' consume`

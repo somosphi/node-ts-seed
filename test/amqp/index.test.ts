@@ -1,9 +1,9 @@
 import amqplib from 'amqplib';
+import { SinonStub } from 'sinon';
 import { sinon } from '../helpers';
 import { RabbitMQ, RabbitMQConfig } from '../../src/amqp/vhosts';
 import { AMQPServer } from '../../src/amqp/index';
-import { Container } from '../../src/container';
-import { SinonStub } from 'sinon';
+import { AppContainer } from '../../src/container';
 
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
@@ -11,8 +11,8 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
-}
-const testContainer = new Container({
+};
+const testContainer = new AppContainer({
   // @ts-ignore
   jsonPlaceholderConfig: {},
 });
@@ -24,7 +24,6 @@ let fnTestVhostStartConsumers: SinonStub;
 const sandbox = sinon.createSandbox();
 
 describe('AMQPServer', () => {
-
   beforeEach(() => {
     fnTestVhostInit = sandbox.stub();
     fnNoConsumerVhostInit = sandbox.stub();
@@ -33,7 +32,8 @@ describe('AMQPServer', () => {
     connection = {
       createChannel: sandbox.stub(),
     };
-    sandbox.stub(amqplib, 'connect')
+    sandbox
+      .stub(amqplib, 'connect')
       // @ts-ignore
       .callsFake(() => connection);
   });
@@ -42,7 +42,8 @@ describe('AMQPServer', () => {
     async init(): Promise<void> {
       fnTestVhostInit();
     }
-    startConsumers(container: Container): void {
+
+    startConsumers(container: AppContainer): void {
       fnTestVhostStartConsumers();
     }
   }

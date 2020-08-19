@@ -1,7 +1,8 @@
+import { inject, provide } from 'injection';
+import { Options } from 'amqplib';
 import { Producer } from './producer';
 import { logger } from '../../../../logger';
 import { RabbitMQ } from '../../../../amqp/vhosts';
-import { Options } from 'amqplib';
 
 export interface UserMessage {
   id: string;
@@ -10,14 +11,13 @@ export interface UserMessage {
   emailAddress: string;
 }
 
+@provide()
 export class UserProducer implements Producer {
-  private readonly exchange: string = 'user.dx';
-  private readonly routingKey: string = 'user.create';
-  protected readonly vHost: RabbitMQ;
+  protected readonly exchange: string = 'user.dx';
 
-  constructor(vHost: RabbitMQ) {
-    this.vHost = vHost;
-  }
+  protected readonly routingKey: string = 'user.create';
+
+  constructor(@inject('workVHost') protected readonly vHost: RabbitMQ) {}
 
   send(message: UserMessage): void {
     const optionsConfig: Options.Publish = {

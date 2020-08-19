@@ -8,7 +8,6 @@ class TestHttpIntegration extends HttpIntegration {
 }
 
 describe('HttpIntegration', () => {
-
   describe('#constructor', () => {
     it('should set instance property', () => {
       const httpIntegration = new TestHttpIntegration({

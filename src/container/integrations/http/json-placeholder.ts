@@ -1,4 +1,6 @@
+import { provide } from 'injection';
 import { HttpIntegration } from './http';
+import { env } from '../../../env';
 
 export interface JsonPlaceholderConfig {
   baseURL: string;
@@ -27,15 +29,15 @@ export interface JsonPlaceholderUser {
   };
 }
 
+@provide()
 export class JsonPlaceholderIntegration extends HttpIntegration {
-
-  constructor(options: JsonPlaceholderConfig) {
+  constructor() {
     super({
-      baseURL: options.baseURL,
+      baseURL: env.jsonPlaceholderUrl,
     });
   }
 
-  async getUsers(): Promise<JsonPlaceholderUser[]>  {
+  async getUsers(): Promise<JsonPlaceholderUser[]> {
     const response = await this.instance.get<JsonPlaceholderUser[]>('/users');
     return response.data;
   }

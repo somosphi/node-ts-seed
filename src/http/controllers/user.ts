@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { Container } from '../../container';
+import { AppContainer } from '../../container';
 import { UserService } from '../../container/services/user';
 import { findUserSchema, createUserSchema } from '../schemas/user';
 import { validatorMiddleware } from '../middlewares/validator';
@@ -10,9 +10,9 @@ import { BaseController } from './controller';
 export class UserController extends BaseController {
   protected userService: UserService;
 
-  constructor(container: Container) {
+  constructor(container: AppContainer) {
     super();
-    this.userService = container.userService;
+    this.userService = container.get<UserService>(UserService);
   }
 
   @Get('/')

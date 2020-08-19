@@ -2,7 +2,6 @@ import { sinon, assert, expect } from './helpers';
 import * as errors from '../src/errors';
 
 describe('CodedError', () => {
-
   class TestCodedError extends errors.CodedError {}
 
   it('should set property code and call toJSON on use JSON.stringify', () => {
@@ -17,11 +16,12 @@ describe('CodedError', () => {
 });
 
 describe('DetailedCodedError', () => {
-
   class TestDetailedCodedError extends errors.DetailedCodedError {}
 
   it('should set property code and call toJSON on use JSON.stringify', () => {
-    const error = new TestDetailedCodedError('TEST', 'Error test', { message: 'Ola mundo' });
+    const error = new TestDetailedCodedError('TEST', 'Error test', {
+      message: 'Ola mundo',
+    });
     const fakeToJSON = sinon.fake.returns(error.toJSON());
     error.toJSON = fakeToJSON;
     JSON.stringify(error);

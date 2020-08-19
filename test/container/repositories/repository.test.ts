@@ -1,8 +1,8 @@
 import { Transaction } from 'knex';
 import { assert, expect, sinon } from '../../helpers';
-import { MySQLModel } from '../../../src/container/models/mysql';
+import { Repository } from '../../../src/container/repositories/repository';
 
-class TestModel extends MySQLModel<any> {
+class TestRepository extends Repository<any> {
   static tableName: 'test';
 
   get table() {
@@ -10,7 +10,7 @@ class TestModel extends MySQLModel<any> {
   }
 
   getTableName(): string {
-    return TestModel.tableName;
+    return TestRepository.tableName;
   }
 
   transactionable(trx: Transaction) {
@@ -18,13 +18,12 @@ class TestModel extends MySQLModel<any> {
   }
 }
 
-describe('MySQLModel', () => {
-
+describe('Repository', () => {
   describe('#getTableName', () => {
     it('should return table name', () => {
       // @ts-ignore
-      const testModel = new TestModel();
-      expect(testModel.getTableName()).to.be.eql(TestModel.tableName);
+      const testRepository = new TestRepository();
+      expect(testRepository.getTableName()).to.be.eql(TestRepository.tableName);
     });
   });
 
@@ -33,10 +32,11 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({});
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
-      testModel.table;
+      const testRepository = new TestRepository(databaseQuery);
+      const { table } = testRepository;
 
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
+      expect(table).to.be.eql({});
     });
   });
 
@@ -49,9 +49,10 @@ describe('MySQLModel', () => {
       });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
 
-      const transactionableResult = testModel.transactionable({});
+      // @ts-ignore
+      const transactionableResult = testRepository.transactionable({});
 
       expect(transactionableResult).to.be.eql({});
       assert(transactingQuery.calledOnceWith({}));
@@ -61,12 +62,13 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({});
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
 
-      const transactionableResult = testModel.transactionable();
+      // @ts-ignore
+      const transactionableResult = testRepository.transactionable();
 
       expect(transactionableResult).to.be.eql({});
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
     });
   });
 
@@ -79,31 +81,29 @@ describe('MySQLModel', () => {
       });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
 
       const insertData = { message: 'Ola mundo' };
-      const createdId = await testModel.create(insertData);
+      const createdId = await testRepository.create(insertData);
 
       expect(createdId).to.be.eql('123');
       assert(insertQuery.calledOnceWith(insertData));
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
     });
   });
 
   describe('#all', () => {
     it('should return database query without filter', async () => {
-      const payload = [
-        { message: 'Ola mundo' },
-      ];
+      const payload = [{ message: 'Ola mundo' }];
 
       const databaseQuery = sinon.fake.resolves(payload);
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
-      const result = await testModel.all();
+      const testRepository = new TestRepository(databaseQuery);
+      const result = await testRepository.all();
 
       expect(result).to.be.eql(payload);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
     });
   });
 
@@ -114,11 +114,11 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
 
-      const result = await testModel.getById('1');
+      const result = await testRepository.getById('1');
       expect(result).to.be.eql(null);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(firstQuery.calledOnce);
     });
@@ -131,11 +131,11 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
 
-      const result = await testModel.getById('1');
+      const result = await testRepository.getById('1');
       expect(result).to.be.eql(payload);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(firstQuery.calledOnce);
     });
@@ -148,11 +148,11 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
-      const deleted = await testModel.deleteById('1');
+      const testRepository = new TestRepository(databaseQuery);
+      const deleted = await testRepository.deleteById('1');
 
       expect(deleted).to.be.eql(false);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(deletedQuery.calledOnce);
     });
@@ -163,11 +163,11 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
-      const deleted = await testModel.deleteById('1');
+      const testRepository = new TestRepository(databaseQuery);
+      const deleted = await testRepository.deleteById('1');
 
       expect(deleted).to.be.eql(true);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(deletedQuery.calledOnce);
     });
@@ -180,12 +180,12 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
       const updateData = { message: 'Ola mundo' };
-      const deleted = await testModel.updateById('1', updateData);
+      const deleted = await testRepository.updateById('1', updateData);
 
       expect(deleted).to.be.eql(false);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(updateQuery.calledOnceWith(updateData));
     });
@@ -196,12 +196,12 @@ describe('MySQLModel', () => {
       const databaseQuery = sinon.fake.returns({ where: whereQuery });
 
       // @ts-ignore
-      const testModel = new TestModel(databaseQuery);
+      const testRepository = new TestRepository(databaseQuery);
       const updateData = { message: 'Ola mundo' };
-      const deleted = await testModel.updateById('1', updateData);
+      const deleted = await testRepository.updateById('1', updateData);
 
       expect(deleted).to.be.eql(true);
-      assert(databaseQuery.calledOnceWith(TestModel.tableName));
+      assert(databaseQuery.calledOnceWith(TestRepository.tableName));
       assert(whereQuery.calledOnceWith('id', '1'));
       assert(updateQuery.calledOnceWith(updateData));
     });

@@ -1,5 +1,6 @@
 import { Transaction } from 'knex';
-import { MySQLModel } from './mysql';
+import { provide } from 'injection';
+import { Repository } from './repository';
 import { UserSources } from '../../enums';
 
 export interface User {
@@ -12,16 +13,18 @@ export interface User {
   updatedAt: Date;
 }
 
-export class UserModel extends MySQLModel<User> {
-
+@provide()
+export class UserRepository extends Repository<User> {
   getTableName(): string {
     return 'users';
   }
 
   async getByEmailsWithSource(
-    emails: string[], source: UserSources, trx?: Transaction,
+    emails: string[],
+    source: UserSources,
+    trx?: Transaction
   ): Promise<User[]> {
-    return await this.transactionable(trx)
+    return this.transactionable(trx)
       .whereIn('emailAddress', emails)
       .where('source', source);
   }

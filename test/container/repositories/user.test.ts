@@ -1,14 +1,20 @@
-import { UserModel, User } from '../../../src/container/models/user';
+import { Transaction } from 'knex';
+import { UserRepository, User } from '../../../src/container/repositories/user';
 import { assert, expect, sinon } from '../../helpers';
 import { UserSources } from '../../../src/enums';
 
-describe('UserModel', () => {
+class UserRepositoryTest extends UserRepository {
+  transactionable(trx?: Transaction) {
+    return super.transactionable(trx);
+  }
+}
 
+describe('UserRepository', () => {
   describe('#getTableName', () => {
     it('should use table "users"', () => {
       // @ts-ignore
-      const userModel = new UserModel();
-      expect(userModel.getTableName()).to.be.eql('users');
+      const userRepository = new UserRepository();
+      expect(userRepository.getTableName()).to.be.eql('users');
     });
   });
 
@@ -27,17 +33,19 @@ describe('UserModel', () => {
       ];
 
       // @ts-ignore
-      const userModel = new UserModel();
+      const userRepository = new UserRepositoryTest();
       const sourceQuery = sinon.fake.resolves(payload);
       const emailsQuery = sinon.fake.returns({ where: sourceQuery });
 
-      userModel.transactionable = sinon.fake.returns({
+      userRepository.transactionable = sinon.fake.returns({
         whereIn: emailsQuery,
       });
 
       const emails = ['fulano@gmail.com'];
-      const users = await userModel
-        .getByEmailsWithSource(emails, UserSources.JsonPlaceholder);
+      const users = await userRepository.getByEmailsWithSource(
+        emails,
+        UserSources.JsonPlaceholder
+      );
 
       expect(users).to.be.eql(payload);
       assert(sourceQuery.calledOnceWith('source', UserSources.JsonPlaceholder));

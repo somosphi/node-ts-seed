@@ -3,12 +3,12 @@ import helmet from 'helmet';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import compression from 'compression';
-import { Container } from '../container';
+import { AppContainer } from '../container';
 import { UserController } from './controllers/user';
 import { errorHandlerMiddleware } from './middlewares/errorHandler';
 import { NotFoundError } from '../errors';
 import { BaseController } from './controllers/controller';
-import  { expressLogger } from '../logger';
+import { expressLogger } from '../logger';
 
 export interface HttpServerConfig {
   port: number;
@@ -17,10 +17,12 @@ export interface HttpServerConfig {
 
 export class HttpServer {
   protected app?: express.Application;
-  protected container: Container;
+
+  protected container: AppContainer;
+
   protected config: HttpServerConfig;
 
-  constructor(container: Container, config: HttpServerConfig) {
+  constructor(container: AppContainer, config: HttpServerConfig) {
     this.container = container;
     this.config = config;
   }
@@ -37,9 +39,7 @@ export class HttpServer {
   }
 
   protected loadControllers(): BaseController[] {
-    return [
-      new UserController(this.container),
-    ];
+    return [new UserController(this.container)];
   }
 
   start(): void {
@@ -54,30 +54,39 @@ export class HttpServer {
     app.use(helmet());
     app.use(cors());
     app.use(compression());
-    app.use(bodyParser.json({
-      limit: this.config.bodyLimit,
-    }));
+    app.use(
+      bodyParser.json({
+        limit: this.config.bodyLimit,
+      })
+    );
 
     /* Status endpoint */
     app.get(
       ['/info', '/status'],
-      async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+      async (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
         try {
           res.sendStatus(204);
         } catch (err) {
           next(err);
         }
-      },
+      }
     );
 
-    this.loadControllers().forEach((controller) => {
+    this.loadControllers().forEach(controller => {
       if (!controller.routeConfigs) {
         return;
       }
 
-      controller.routeConfigs.forEach((routeConfig) => {
+      controller.routeConfigs.forEach(routeConfig => {
         const fullPath = [controller.path, routeConfig.path].join('');
-        const jobs = [...routeConfig.middlewares, routeConfig.func.bind(controller)];
+        const jobs = [
+          ...routeConfig.middlewares,
+          routeConfig.func.bind(controller),
+        ];
 
         switch (routeConfig.method) {
           case 'get':
@@ -95,6 +104,8 @@ export class HttpServer {
           case 'delete':
             app.delete(fullPath, jobs);
             break;
+          default:
+            break;
         }
       });
     });
@@ -102,9 +113,16 @@ export class HttpServer {
     app.use(expressLogger.onError.bind(expressLogger));
     app.use(expressLogger.onSuccess.bind(expressLogger));
 
-    app.use('*', (req: express.Request, res: express.Response, next: express.NextFunction) => {
-      next(new NotFoundError());
-    });
+    app.use(
+      '*',
+      (
+        req: express.Request,
+        res: express.Response,
+        next: express.NextFunction
+      ) => {
+        next(new NotFoundError());
+      }
+    );
 
     app.use(errorHandlerMiddleware);
     app.listen(this.config.port);

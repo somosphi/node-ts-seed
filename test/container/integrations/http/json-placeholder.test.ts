@@ -1,11 +1,13 @@
-import { nock, expect } from '../../../helpers';
-import { JsonPlaceholderIntegration }
-  from '../../../../src/container/integrations/http/json-placeholder';
+import { nock, expect, sinon } from '../../../helpers';
+import { env } from '../../../../src/env';
+import { JsonPlaceholderIntegration } from '../../../../src/container/integrations/http/json-placeholder';
 
 describe('JsonPlaceholderIntegration', () => {
   const baseURL = 'http://localhost:1500/jsonplaceholder';
   const nockInstance = nock(baseURL);
-  const jsonPlaceholderInstance = new JsonPlaceholderIntegration({ baseURL });
+
+  sinon.replace(env, 'jsonPlaceholderUrl', baseURL);
+  const jsonPlaceholderInstance = new JsonPlaceholderIntegration();
 
   describe('#getUsers', () => {
     it('should return users response', async () => {
@@ -17,9 +19,7 @@ describe('JsonPlaceholderIntegration', () => {
         },
       ];
 
-      nockInstance
-        .get('/users')
-        .reply(200, payload);
+      nockInstance.get('/users').reply(200, payload);
 
       const users = await jsonPlaceholderInstance.getUsers();
       expect(users).to.be.eql(payload);
