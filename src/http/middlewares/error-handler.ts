@@ -1,5 +1,10 @@
 import { Request, Response, NextFunction } from 'express';
-import { ResourceNotFoundError, CodedError, NotFoundError } from '../../errors';
+import {
+  ResourceNotFoundError,
+  CodedError,
+  NotFoundError,
+  DetailedCodedError,
+} from '../../errors';
 import { logger } from '../../logger';
 
 export const errorHandlerMiddleware = (
@@ -10,12 +15,24 @@ export const errorHandlerMiddleware = (
 ) => {
   if (err instanceof CodedError) {
     logger.warn(err);
-  } else {
-    logger.error(err);
+
+    const { statusCode, message, code } = err;
+    res.status(statusCode).send({
+      code,
+      message,
+    });
+    return next();
   }
 
-  if (err instanceof NotFoundError || err instanceof ResourceNotFoundError) {
-    res.status(404).send(err);
+  if (err instanceof DetailedCodedError) {
+    logger.warn(err);
+
+    const { statusCode, message, code, details } = err;
+    res.status(statusCode).send({
+      code,
+      message,
+      details,
+    });
     return next();
   }
 

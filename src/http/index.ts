@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import { AppContainer } from '../container';
 import { UserController } from './controllers/user';
-import { errorHandlerMiddleware } from './middlewares/errorHandler';
+import { errorHandlerMiddleware } from './middlewares/error-handler';
 import { NotFoundError } from '../errors';
 import { BaseController } from './controllers/controller';
 import { expressLogger } from '../logger';
