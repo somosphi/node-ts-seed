@@ -61,7 +61,7 @@ describe('Consumer', () => {
     });
     it('should throw', () => {
       const testConsumer = new TestConsumer('test', container);
-      const error = new TestCodedError('test', 'mess');
+      const error = new TestCodedError('test', 'mess', 400);
       fnMessageHandler.throws(error);
       const onConsume = testConsumer.onConsume(channel);
       onConsume(message);
