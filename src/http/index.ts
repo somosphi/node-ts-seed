@@ -5,10 +5,22 @@ import bodyParser from 'body-parser';
 import compression from 'compression';
 import { AppContainer } from '../container';
 import { UserController } from './controllers/user';
-import { errorHandlerMiddleware } from './middlewares/errorHandler';
+import { errorHandlerMiddleware } from './middlewares/error-handler';
 import { NotFoundError } from '../errors';
 import { BaseController } from './controllers/controller';
 import { expressLogger } from '../logger';
+
+export interface HttpRequest<
+  Body = any,
+  Query = any,
+  Params = any,
+  Cookies = any
+> extends Express.Request {
+  body: Body;
+  cookies: Cookies;
+  params: Params;
+  query: Query;
+}
 
 export interface HttpServerConfig {
   port: number;
