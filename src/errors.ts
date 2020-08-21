@@ -40,15 +40,21 @@ export abstract class DetailedCodedError extends CodedError {
   }
 }
 
-export class NotFoundError extends CodedError {
-  constructor() {
-    super('NOT_FOUND', 'Page not found', 404);
+export class NotFound extends CodedError {
+  constructor(code: string, message: string) {
+    super(code, message, 404);
   }
 }
 
-export class ResourceNotFoundError extends CodedError {
+export class NotFoundError extends NotFound {
   constructor() {
-    super('RESOURCE_NOT_FOUND', 'Resource not found', 404);
+    super('NOT_FOUND', 'Page not found');
+  }
+}
+
+export class ResourceNotFoundError extends NotFound {
+  constructor() {
+    super('RESOURCE_NOT_FOUND', 'Resource not found');
   }
 }
 
