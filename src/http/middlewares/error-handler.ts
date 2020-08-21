@@ -1,10 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import {
-  ResourceNotFoundError,
-  CodedError,
-  NotFoundError,
-  DetailedCodedError,
-} from '../../errors';
+import { CodedError } from '../../errors';
 import { logger } from '../../logger';
 
 export const errorHandlerMiddleware = (
@@ -14,17 +9,6 @@ export const errorHandlerMiddleware = (
   next: NextFunction
 ) => {
   if (err instanceof CodedError) {
-    logger.warn(err);
-
-    const { statusCode, message, code } = err;
-    res.status(statusCode).send({
-      code,
-      message,
-    });
-    return next();
-  }
-
-  if (err instanceof DetailedCodedError) {
     logger.warn(err);
 
     const { statusCode, message, code, details } = err;

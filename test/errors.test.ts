@@ -17,17 +17,12 @@ describe('CodedError', () => {
 });
 
 describe('DetailedCodedError', () => {
-  class TestDetailedCodedError extends errors.DetailedCodedError {}
+  class TestDetailedCodedError extends errors.CodedError {}
 
   it('should set property code and call toJSON on use JSON.stringify', () => {
-    const error = new TestDetailedCodedError(
-      'TEST',
-      'Error test',
-      {
-        message: 'Ola mundo',
-      },
-      400
-    );
+    const error = new TestDetailedCodedError('TEST', 'Error test', 400, {
+      message: 'Ola mundo',
+    });
     const fakeToJSON = sinon.fake.returns(error.toJSON());
     error.toJSON = fakeToJSON;
     JSON.stringify(error);

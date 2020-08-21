@@ -2,47 +2,39 @@ import Joi from '@hapi/joi';
 
 export abstract class CodedError extends Error {
   code: string;
-
   statusCode: number;
+  details?: Record<string, any>;
 
-  constructor(code: string, message: string, statusCode: number) {
+  constructor(
+    code: string,
+    message: string,
+    statusCode: number,
+    details?: Record<string, any>
+  ) {
     super(message);
     this.code = code;
     this.statusCode = statusCode;
+    this.details = details;
   }
 
   toJSON() {
     return {
       message: this.message,
       code: this.code,
-    };
-  }
-}
-
-export abstract class DetailedCodedError extends CodedError {
-  details: Record<string, any>;
-
-  constructor(
-    code: string,
-    message: string,
-    details: Record<string, any>,
-    statusCode: number
-  ) {
-    super(code, message, statusCode);
-    this.details = details;
-  }
-
-  toJSON() {
-    return {
-      ...super.toJSON(),
       details: this.details,
     };
   }
 }
 
 export class NotFound extends CodedError {
-  constructor(code: string, message: string) {
-    super(code, message, 404);
+  constructor(code: string, message: string, details?: Record<string, any>) {
+    super(code, message, 404, details);
+  }
+}
+
+export class BadRequest extends CodedError {
+  constructor(code: string, message: string, details?: Record<string, any>) {
+    super(code, message, 400, details);
   }
 }
 
@@ -58,8 +50,8 @@ export class ResourceNotFoundError extends NotFound {
   }
 }
 
-export class ValidationError extends DetailedCodedError {
+export class ValidationError extends BadRequest {
   constructor(details: Joi.ValidationErrorItem[]) {
-    super('VALIDATION_FAILED', 'Invalid request data', details, 400);
+    super('VALIDATION_FAILED', 'Invalid request data', details);
   }
 }
