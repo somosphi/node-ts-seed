@@ -6,6 +6,7 @@ import { FetchUsersCommand } from './commands/fetch-users';
 
 export class Bash {
   protected commands: Command[];
+
   protected readline: readline.Interface;
 
   constructor(container: AppContainer) {

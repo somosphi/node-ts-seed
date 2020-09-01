@@ -1,9 +1,9 @@
 import amqplib from 'amqplib';
+import { SinonStub } from 'sinon';
 import { sinon } from '../helpers';
 import { RabbitMQ, RabbitMQConfig } from '../../src/amqp/vhosts';
 import { AMQPServer } from '../../src/amqp/index';
 import { AppContainer } from '../../src/container';
-import { SinonStub } from 'sinon';
 
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',
@@ -42,6 +42,7 @@ describe('AMQPServer', () => {
     async init(): Promise<void> {
       fnTestVhostInit();
     }
+
     startConsumers(container: AppContainer): void {
       fnTestVhostStartConsumers();
     }

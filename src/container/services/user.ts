@@ -1,42 +1,37 @@
 import { inject, provide } from 'injection';
-import { UserModel, User } from '../models/user';
+import { UserRepository, User } from '../repositories/user';
 import { JsonPlaceholderIntegration } from '../integrations/http/json-placeholder';
 import { UserSources } from '../../enums';
 import { ResourceNotFoundError } from '../../errors';
 import { UserProducer } from '../integrations/amqp/producers/user';
 
-export interface CreateUserDTO {
-  name: string;
-  username: string;
-  emailAddress: string;
-  source: string;
-}
-
 @provide()
 export class UserService {
   constructor(
-    @inject() protected userModel: UserModel,
+    @inject() protected userRepository: UserRepository,
     @inject() protected jsonPlaceholderIntegration: JsonPlaceholderIntegration,
     @inject() protected userProducer: UserProducer
   ) {}
 
   all(): Promise<User[]> {
-    return this.userModel.all();
+    return this.userRepository.all();
   }
 
   async findById(id: string): Promise<User> {
-    const user = await this.userModel.getById(id);
+    const user = await this.userRepository.getById(id);
     if (!user) {
       throw new ResourceNotFoundError();
     }
     return user;
   }
 
-  async create(userDto: CreateUserDTO): Promise<string> {
+  async create(
+    userDto: Omit<User, 'id' | 'createdAt' | 'updatedAt'>
+  ): Promise<string> {
     const { name, username, emailAddress } = userDto;
 
     try {
-      const id = await this.userModel.create(userDto);
+      const id = await this.userRepository.create(userDto);
       this.userProducer.send({ id, name, username, emailAddress });
       return id;
     } catch (err) {
@@ -53,8 +48,8 @@ export class UserService {
 
     const fetchedIds: string[] = [];
 
-    await this.userModel.transaction(async trx => {
-      const sourceDatabaseUsers = await this.userModel.getByEmailsWithSource(
+    await this.userRepository.transaction(async trx => {
+      const sourceDatabaseUsers = await this.userRepository.getByEmailsWithSource(
         jsonPlaceholderEmails,
         UserSources.JsonPlaceholder,
         trx
@@ -76,7 +71,7 @@ export class UserService {
               emailAddress: jsonPlaceholderEmail,
               source: UserSources.JsonPlaceholder,
             };
-            fetchedIds.push(await this.userModel.create(createData, trx));
+            fetchedIds.push(await this.userRepository.create(createData, trx));
           }
         })
       );

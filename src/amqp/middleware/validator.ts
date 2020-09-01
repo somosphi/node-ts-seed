@@ -1,9 +1,7 @@
 import Joi from '@hapi/joi';
 import { ValidationError } from '../../errors';
 
-export const validation = (schema: Joi.Schema) => <T>(
-  message: any
-): T => {
+export const validation = (schema: Joi.Schema) => <T>(message: any): T => {
   const validation = schema.validate(message, {
     abortEarly: false,
     stripUnknown: true,

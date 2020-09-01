@@ -1,5 +1,5 @@
-import { AppContainer } from '../../container';
 import { ConsumeMessage, Channel, Message } from 'amqplib';
+import { AppContainer } from '../../container';
 import { logger } from '../../logger';
 
 export abstract class Consumer {

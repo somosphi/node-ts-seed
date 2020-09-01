@@ -3,7 +3,7 @@ import { expect } from '../helpers';
 
 describe('BufferConverter', () => {
   it('should convert object', () => {
-    const message = {prop:123};
+    const message = { prop: 123 };
     const buffer = BufferConverter.converter(message);
     expect(buffer.toString()).to.be.equals('{"prop":123}');
   });
@@ -22,5 +22,4 @@ describe('BufferConverter', () => {
     const buffer = BufferConverter.converter(message);
     expect(buffer.toString()).to.be.equals('');
   });
-
 });

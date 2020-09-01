@@ -1,6 +1,6 @@
 import { assert, sinon, expect } from '../../helpers';
 import { UserService } from '../../../src/container/services/user';
-import { User } from '../../../src/container/models/user';
+import { User } from '../../../src/container/repositories/user';
 import { ResourceNotFoundError } from '../../../src/errors';
 import { UserSources } from '../../../src/enums';
 
@@ -10,7 +10,7 @@ describe('UserService', () => {
       const payload: User[] = [];
 
       const providers = {
-        userModel: {
+        userRepository: {
           all: sinon.fake.resolves(payload),
         },
       };
@@ -20,7 +20,7 @@ describe('UserService', () => {
       const result = await userService.all();
 
       expect(result).to.be.eql(payload);
-      assert(providers.userModel.all.calledOnce);
+      assert(providers.userRepository.all.calledOnce);
     });
   });
 
@@ -29,7 +29,7 @@ describe('UserService', () => {
       const payload = { message: 'Ola mundo' };
 
       const providers = {
-        userModel: {
+        userRepository: {
           getById: sinon.fake.resolves(payload),
         },
       };
@@ -39,17 +39,17 @@ describe('UserService', () => {
       const user = await userService.findById('1');
 
       expect(user).to.be.eql(payload);
-      assert(providers.userModel.getById.calledOnceWith('1'));
+      assert(providers.userRepository.getById.calledOnceWith('1'));
     });
 
     it('should throw resource not found error', async () => {
       const payload = null;
 
-      const userModel = {
+      const userRepository = {
         getById: sinon.fake.resolves(payload),
       };
       // @ts-ignore
-      const userService = new UserService(userModel);
+      const userService = new UserService(userRepository);
 
       let error;
       try {
@@ -59,7 +59,7 @@ describe('UserService', () => {
       }
 
       expect(error).to.be.instanceOf(ResourceNotFoundError);
-      assert(userModel.getById.calledOnceWith('1'));
+      assert(userRepository.getById.calledOnceWith('1'));
     });
   });
 
@@ -82,14 +82,14 @@ describe('UserService', () => {
       const jsonPlaceholderIntegration = {
         getUsers: sinon.fake.resolves(jsonPlaceholderUsers),
       };
-      const userModel = {
+      const userRepository = {
         getByEmailsWithSource: sinon.fake.resolves(sourceDatabaseUsers),
         create: sinon.fake.resolves('1'),
         transaction: sinon.fake((cb: Function) => cb()),
       };
 
       const providers = {
-        userModel,
+        userRepository,
         jsonPlaceholderIntegration,
       };
 
@@ -100,13 +100,13 @@ describe('UserService', () => {
       expect(fetchedIds).to.be.eql(['1']);
       assert(jsonPlaceholderIntegration.getUsers.calledOnce);
       assert(
-        userModel.getByEmailsWithSource(
+        userRepository.getByEmailsWithSource(
           placeholderEmails,
           UserSources.JsonPlaceholder
         )
       );
       assert(
-        userModel.create.calledOnceWith({
+        userRepository.create.calledOnceWith({
           name: jsonPlaceholderUsers[0].name,
           username: jsonPlaceholderUsers[0].username,
           emailAddress: jsonPlaceholderUsers[0].email.toLowerCase(),

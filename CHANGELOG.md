@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Ongoing Changes
 
+## [1.3.0]
+
+### Added
+
+- Add package js-logger in project
+
 ## [1.2.0]
 
 ### Added

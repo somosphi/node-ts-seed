@@ -34,12 +34,10 @@ describe('Consumer', () => {
 
   describe('onConsume', () => {
     class TestConsumer extends Consumer {
-      constructor(queue: string, container: AppContainer) {
-        super(queue, container);
-      }
       messageHandler(message: Message) {
         fnMessageHandler(message);
       }
+
       onConsumeError() {
         fnOnConsumeError();
       }
@@ -63,7 +61,7 @@ describe('Consumer', () => {
     });
     it('should throw', () => {
       const testConsumer = new TestConsumer('test', container);
-      const error = new TestCodedError('test', 'mess');
+      const error = new TestCodedError('test', 'mess', 400);
       fnMessageHandler.throws(error);
       const onConsume = testConsumer.onConsume(channel);
       onConsume(message);

@@ -1,7 +1,7 @@
 import { sinon, assert } from '../../helpers';
 import { UserConsumer } from '../../../src/amqp/consumers/user';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
-import validatorMiddleware from '../../../src/amqp/middleware/validator';
+import * as validatorMiddleware from '../../../src/amqp/middleware/validator';
 import { findUserSchema } from '../../../src/amqp/schemas/user';
 
 let testContainer: any;

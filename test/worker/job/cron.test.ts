@@ -6,14 +6,12 @@ class TestCron extends Cron {
     super('* * * * * *');
   }
 
-  async handler(): Promise<void> {
-  }
+  async handler(): Promise<void> {}
 
-  onComplete(): void {
-  }
+  onComplete(): void {}
 
-  async errorHandler(): Promise<void> {
-  }
+  async errorHandler(): Promise<void> {}
+
   // @ts-ignore
   execute() {
     return super.execute();

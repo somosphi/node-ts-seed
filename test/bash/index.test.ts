@@ -6,6 +6,7 @@ describe('Bash', () => {
     setCommands(value: any) {
       this.commands = value;
     }
+
     getCommandBySignature(signature: string) {
       return super.getCommandBySignature(signature);
     }

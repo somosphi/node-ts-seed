@@ -6,6 +6,7 @@ const sandbox = sinon.createSandbox();
 
 class UserProducerTest extends UserProducer {
   readonly exchange = super.exchange;
+
   readonly routingKey = super.routingKey;
 }
 

@@ -3,7 +3,8 @@ import { AppContainer } from '../../container';
 import { UserService } from '../../container/services/user';
 
 export class FetchUsersCommand extends Command {
-  signature: string = 'fetch-users';
+  signature = 'fetch-users';
+
   protected readonly userService: UserService;
 
   constructor(container: AppContainer) {
