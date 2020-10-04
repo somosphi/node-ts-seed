@@ -11,6 +11,8 @@ import { RabbitMQConfig } from './amqp/vhosts';
 export class Application {
   protected readonly bashFlag = '--bash';
 
+  protected readonly startConsumersFlag = '--startConsumers';
+
   protected httpServer?: HttpServer;
 
   protected worker?: Worker;
@@ -41,6 +43,8 @@ export class Application {
         port: env.rabbitMQPort,
         username: env.rabbitMQUsername,
         password: env.rabbitMQPassword,
+        consumerPrefetch: env.rabbitMQConsumerPrefetch,
+        producerPrefetch: env.rabbitMQProducerPrefetch,
       };
 
       this.amqpServer = new AMQPServer(
@@ -48,23 +52,26 @@ export class Application {
         env.rabbitMQEnabled === 'true'
       );
 
-      await this.amqpServer.start();
-
       const container = new AppContainer({
         homeVHost: this.amqpServer.vhosts.home,
         workVHost: this.amqpServer.vhosts.work,
       });
 
-      this.amqpServer.startAllConsumers(container);
-
       if (process.argv.includes(this.bashFlag)) {
         this.bash = await this.initBash(container);
+        const initOptions = {
+          startProducers: true,
+          startConsumers: !!process.argv.includes(this.startConsumersFlag),
+        };
+        await this.amqpServer.start(container, initOptions);
         process.exit(0);
+      } else {
+        await this.amqpServer.start(container);
       }
 
-      this.worker = new Worker(container);
-      this.worker.start();
-      logger.info(`Worker started with ${this.worker.jobsCount} job(s)`);
+      // this.worker = new Worker(container);
+      // this.worker.start();
+      // logger.info(`Worker started with ${this.worker.jobsCount} job(s)`);
 
       this.httpServer = new HttpServer(container, {
         port: env.httpPort,

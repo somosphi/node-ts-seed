@@ -20,6 +20,14 @@ const props = {
   rabbitMQPassword: process.env.RABBITMQ_PASSWORD || 'admin',
   rabbitMQHomeVHost: process.env.RABBITMQ_HOME_VHOST || '/',
   rabbitMQWorkVHost: process.env.RABBITMQ_WORK_VHOST || '/',
+  rabbitMQConsumerPrefetch: parseInt(
+    process.env.RABBITMQ_CONSUMER_PREFETCH || '10',
+    10
+  ),
+  rabbitMQProducerPrefetch: parseInt(
+    process.env.RABBITMQ_PRODUCER_PREFETCH || '10',
+    10
+  ),
 };
 
 export const env = new EnvValidator(props);

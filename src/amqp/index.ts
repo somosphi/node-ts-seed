@@ -1,8 +1,7 @@
 import { HomeVHost } from './vhosts/home';
-import { RabbitMQConfig, RabbitMQ } from './vhosts/index';
+import { RabbitMQConfig, RabbitMQ, InitOptions } from './vhosts/index';
 import { WorkVHost } from './vhosts/work';
 import { AppContainer } from '../container';
-import { RabbitMQConsumer } from './rabbitmq-consumer';
 import { logger } from '../logger';
 
 export interface VHostMap {
@@ -16,6 +15,7 @@ export class AMQPServer {
   vhosts: VHostMap;
 
   constructor(config: RabbitMQConfig, enabled: boolean) {
+    // @ts-ignore
     this.vhosts = {
       home: new HomeVHost('home', config),
       work: new WorkVHost('work', config),
@@ -23,22 +23,14 @@ export class AMQPServer {
     this.enabled = enabled;
   }
 
-  async start() {
+  async start(container: AppContainer, initOptions?: InitOptions) {
     if (this.enabled) {
       await Promise.all(
         Object.values(this.vhosts).map(async (vHost: RabbitMQ) => {
-          return vHost.init();
+          return vHost.init(container, initOptions);
         })
       );
       logger.info(`RabbitMQ: AMQP server started`);
-    }
-  }
-
-  startAllConsumers(container: AppContainer): void {
-    if (this.enabled) {
-      Object.values(this.vhosts).forEach((vHost: RabbitMQConsumer) => {
-        if (vHost.startConsumers) vHost.startConsumers(container);
-      });
     }
   }
 }

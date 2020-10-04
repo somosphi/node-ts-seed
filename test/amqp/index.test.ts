@@ -11,6 +11,8 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
+  consumerPrefetch: 10,
+  producerPrefetch: 10,
 };
 const testContainer = new AppContainer({
   // @ts-ignore
@@ -61,38 +63,24 @@ describe('AMQPServer', () => {
       this.vhosts = vhosts;
     }
   }
+
   describe('start', () => {
     it('should init all vhosts', async () => {
       const amqpServer = new TestAMQPServer(rabbitMQConfig, true);
       amqpServer.setVHosts(testVhosts);
 
-      await amqpServer.start();
+      await amqpServer.start(testContainer);
       sandbox.assert.calledOnce(fnTestVhostInit);
       sandbox.assert.calledOnce(fnNoConsumerVhostInit);
     });
+
     it('should not init vhosts when server is disabled', async () => {
       const amqpServer = new TestAMQPServer(rabbitMQConfig, false);
       amqpServer.setVHosts(testVhosts);
 
-      await amqpServer.start();
+      await amqpServer.start(testContainer);
       sandbox.assert.notCalled(fnTestVhostInit);
       sandbox.assert.notCalled(fnNoConsumerVhostInit);
-    });
-  });
-  describe('startAllConsumers', () => {
-    it('should start consumers', async () => {
-      const amqpServer = new TestAMQPServer(rabbitMQConfig, true);
-      amqpServer.setVHosts(testVhosts);
-
-      await amqpServer.startAllConsumers(testContainer);
-      sandbox.assert.calledOnce(fnTestVhostStartConsumers);
-    });
-    it('should not start consumers when server is disabled', async () => {
-      const amqpServer = new TestAMQPServer(rabbitMQConfig, false);
-      amqpServer.setVHosts(testVhosts);
-
-      await amqpServer.startAllConsumers(testContainer);
-      sandbox.assert.notCalled(fnTestVhostStartConsumers);
     });
   });
 

@@ -1,4 +1,4 @@
-import { IsInt, IsUrl, IsEnum, IsNotEmpty } from 'class-validator';
+import { IsInt, IsUrl, IsEnum, IsNotEmpty, IsNumber } from 'class-validator';
 
 export class EnvValidator {
   knexConfig: any;
@@ -36,6 +36,12 @@ export class EnvValidator {
 
   @IsNotEmpty()
   rabbitMQWorkVHost: string;
+
+  @IsNumber()
+  rabbitMQConsumerPrefetch: number;
+
+  @IsNumber()
+  rabbitMQProducerPrefetch: number;
 
   constructor(props: any) {
     Object.assign(this, props);

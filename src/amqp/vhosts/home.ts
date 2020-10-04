@@ -29,7 +29,10 @@ export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
     this.container = container;
     this.loadConsumers();
     this.consumers.forEach((consumer: Consumer) => {
-      this.channel.consume(consumer.queue, consumer.onConsume(this.channel));
+      this.consumerChannel.consume(
+        consumer.queue,
+        consumer.onConsume(this.consumerChannel)
+      );
       logger.info(
         `RabbitMQ: '${this.vHost}' vhost started '${consumer.queue}' consume`
       );
