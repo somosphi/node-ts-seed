@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Ongoing Changes
 
+## [1.3.0]
+
+### Added
+
+- Add package js-logger in project
+- Possibility to start only amqp consumers or producers
+- Consumer and producer prefetch config
+
+
 ## [1.2.0]
 
 ### Added

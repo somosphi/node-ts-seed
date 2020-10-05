@@ -1,8 +1,8 @@
 import { inject, provide } from 'injection';
+import { Options } from 'amqplib';
 import { Producer } from './producer';
 import { logger } from '../../../../logger';
 import { RabbitMQ } from '../../../../amqp/vhosts';
-import { Options } from 'amqplib';
 
 export interface UserMessage {
   id: string;
@@ -14,6 +14,7 @@ export interface UserMessage {
 @provide()
 export class UserProducer implements Producer {
   protected readonly exchange: string = 'user.dx';
+
   protected readonly routingKey: string = 'user.create';
 
   constructor(@inject('workVHost') protected readonly vHost: RabbitMQ) {}

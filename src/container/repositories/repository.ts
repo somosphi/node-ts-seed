@@ -1,7 +1,7 @@
 import knex, { QueryBuilder, Transaction } from 'knex';
 import { inject } from 'injection';
 
-export abstract class MySQLModel<T> {
+export abstract class Repository<T> {
   protected abstract getTableName(): string;
 
   constructor(@inject('mysqlDatabase') protected database: knex) {}
@@ -21,17 +21,17 @@ export abstract class MySQLModel<T> {
     return this.database.transaction.bind(this.database);
   }
 
-  async create(data: Object, trx?: Transaction): Promise<string> {
+  async create(data: Record<string, any>, trx?: Transaction): Promise<string> {
     const [createdId] = await this.transactionable(trx).insert(data);
     return createdId.toString();
   }
 
   async all(trx?: Transaction): Promise<T[]> {
-    return await this.transactionable(trx);
+    return this.transactionable(trx);
   }
 
   async getById(id: string, trx?: Transaction): Promise<T | null> {
-    return await this.transactionable(trx)
+    return this.transactionable(trx)
       .where('id', id)
       .first();
   }
@@ -45,7 +45,7 @@ export abstract class MySQLModel<T> {
 
   async updateById(
     id: string,
-    data: Object,
+    data: Record<string, any>,
     trx?: Transaction
   ): Promise<boolean> {
     const result = await this.transactionable(trx)

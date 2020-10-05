@@ -19,6 +19,8 @@ const rabbitMQConfig: RabbitMQConfig = {
   port: 123,
   username: 'user',
   password: 'pass',
+  consumerPrefetch: 10,
+  producerPrefetch: 10,
 };
 let fnLoadConsumers: SinonStub;
 let fnConsume: SinonStub;
@@ -58,6 +60,7 @@ describe('HomeVHost', () => {
           fnOnConsume();
           return () => {};
         }
+
         messageHandler() {}
       }
 
@@ -66,15 +69,17 @@ describe('HomeVHost', () => {
 
       class TestHomeVhost extends HomeVHost {
         channel: Channel;
+
         constructor(vHost: string, config: RabbitMQConfig) {
           super(vHost, config);
-          this.channel = {
+          this.consumerChannel = {
             // @ts-ignore
             consume: () => {
               fnConsume();
             },
           };
         }
+
         loadConsumers() {
           this.consumers = [consumerOne, consumerTwo];
           fnLoadConsumers();

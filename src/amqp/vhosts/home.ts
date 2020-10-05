@@ -7,6 +7,7 @@ import { logger } from '../../logger';
 
 export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
   container?: AppContainer;
+
   consumers: Consumer[] = [];
 
   constructor(vHost: string, config: RabbitMQConfig, container?: AppContainer) {
@@ -27,8 +28,11 @@ export class HomeVHost extends RabbitMQ implements RabbitMQConsumer {
   startConsumers(container: AppContainer): void {
     this.container = container;
     this.loadConsumers();
-    this.consumers.map((consumer: Consumer) => {
-      this.channel.consume(consumer.queue, consumer.onConsume(this.channel));
+    this.consumers.forEach((consumer: Consumer) => {
+      this.consumerChannel.consume(
+        consumer.queue,
+        consumer.onConsume(this.consumerChannel)
+      );
       logger.info(
         `RabbitMQ: '${this.vHost}' vhost started '${consumer.queue}' consume`
       );

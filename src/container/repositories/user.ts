@@ -1,7 +1,7 @@
 import { Transaction } from 'knex';
-import { MySQLModel } from './mysql';
-import { UserSources } from '../../enums';
 import { provide } from 'injection';
+import { Repository } from './repository';
+import { UserSources } from '../../enums';
 
 export interface User {
   id: string;
@@ -14,7 +14,7 @@ export interface User {
 }
 
 @provide()
-export class UserModel extends MySQLModel<User> {
+export class UserRepository extends Repository<User> {
   getTableName(): string {
     return 'users';
   }
@@ -24,7 +24,7 @@ export class UserModel extends MySQLModel<User> {
     source: UserSources,
     trx?: Transaction
   ): Promise<User[]> {
-    return await this.transactionable(trx)
+    return this.transactionable(trx)
       .whereIn('emailAddress', emails)
       .where('source', source);
   }
