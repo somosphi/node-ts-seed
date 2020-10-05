@@ -69,9 +69,9 @@ export class Application {
         await this.amqpServer.start(container);
       }
 
-      // this.worker = new Worker(container);
-      // this.worker.start();
-      // logger.info(`Worker started with ${this.worker.jobsCount} job(s)`);
+      this.worker = new Worker(container);
+      this.worker.start();
+      logger.info(`Worker started with ${this.worker.jobsCount} job(s)`);
 
       this.httpServer = new HttpServer(container, {
         port: env.httpPort,
