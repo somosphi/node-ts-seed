@@ -12,8 +12,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 - Add package js-logger in project
-- Reconnect amqp channels when connection is lost
 - Possibility to start only amqp consumers or producers
+- Consumer and producer prefetch config
 
 
 ## [1.2.0]
