@@ -1,8 +1,9 @@
 import amqplib from 'amqplib';
 import { SinonStub } from 'sinon';
 import { sinon, expect } from '../../helpers';
-import { RabbitMQ, RabbitMQConfig } from '../../../src/amqp/vhosts';
+import { RabbitMQ } from '../../../src/amqp/vhosts';
 import { BufferConverter } from '../../../src/amqp/buffer-converter';
+import { RabbitMQConfig } from '../../../src/types';
 
 const connConfig = {
   hostname: 'host',

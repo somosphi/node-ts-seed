@@ -1,11 +1,6 @@
 import { FetchUsersJob } from './jobs/fetch-users';
 import { AppContainer } from '../container';
-
-export interface WorkerJob {
-  running: boolean;
-  start(): void;
-  stop(): void;
-}
+import { WorkerJob } from '../types';
 
 export class Worker {
   protected jobs: WorkerJob[];

@@ -2,16 +2,7 @@ import { Transaction } from 'knex';
 import { provide } from 'injection';
 import { Repository } from './repository';
 import { UserSources } from '../../enums';
-
-export interface User {
-  id: string;
-  name: string;
-  username: string;
-  emailAddress: string;
-  source: UserSources;
-  createdAt: Date;
-  updatedAt: Date;
-}
+import { User } from '../../types';
 
 @provide()
 export class UserRepository extends Repository<User> {

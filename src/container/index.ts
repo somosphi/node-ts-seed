@@ -4,14 +4,8 @@ import { UserRepository } from './repositories/user';
 import { UserService } from './services/user';
 import { JsonPlaceholderIntegration } from './integrations/http/json-placeholder';
 import { UserProducer } from './integrations/amqp/producers/user';
-import { WorkVHost } from '../amqp/vhosts/work';
-import { HomeVHost } from '../amqp/vhosts/home';
 import { env } from '../env';
-
-export interface ContainerConfig {
-  homeVHost: HomeVHost;
-  workVHost: WorkVHost;
-}
+import { ContainerConfig } from '../types';
 
 export class AppContainer extends Container {
   constructor(protected config: ContainerConfig) {

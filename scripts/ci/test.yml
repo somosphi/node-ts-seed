@@ -1,0 +1,22 @@
+unit:
+  stage: test
+  image: node:12-alpine
+  script:
+    - npm install
+    - npm run test
+  coverage: /All files[^|]*\|[^|]*\s+([\d\.]+)/
+  only:
+    - master
+    - develop
+    - merge_requests
+
+lint:
+  stage: test
+  image: node:12-alpine
+  script:
+    - npm install
+    - npm run lint
+  only:
+    - master
+    - develop
+    - merge_requests

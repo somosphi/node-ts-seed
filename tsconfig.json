@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
     "experimentalDecorators": true,
-    "outDir": "./lib",
+    "outDir": "./release",
     "module": "commonjs",
     "target": "es6",
     "esModuleInterop": true,
     "strict": true,
     "strictPropertyInitialization": false
   },
-  "include": [
-    "./src/**/*",
-  ]
+  "include": ["./src/**/*"]
 }

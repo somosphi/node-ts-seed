@@ -1,9 +1,10 @@
 import amqplib from 'amqplib';
 import { SinonStub } from 'sinon';
 import { sinon } from '../helpers';
-import { RabbitMQ, RabbitMQConfig } from '../../src/amqp/vhosts';
+import { RabbitMQ } from '../../src/amqp/vhosts';
 import { AMQPServer } from '../../src/amqp/index';
 import { AppContainer } from '../../src/container';
+import { RabbitMQConfig } from '../../src/types';
 
 const rabbitMQConfig: RabbitMQConfig = {
   protocol: '123',

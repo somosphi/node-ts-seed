@@ -1,11 +1,11 @@
 import { Channel } from 'amqplib';
 import { SinonStub } from 'sinon';
 import { sinon, expect } from '../../helpers';
-import { RabbitMQConfig } from '../../../src/amqp/vhosts';
 import { HomeVHost } from '../../../src/amqp/vhosts/home';
 import { UserConsumer } from '../../../src/amqp/consumers/user';
 import { Consumer } from '../../../src/amqp/consumers/consumer';
 import { AppContainer } from '../../../src/container';
+import { RabbitMQConfig } from '../../../src/types';
 
 const sandbox = sinon.createSandbox();
 
