@@ -1,14 +1,7 @@
 import amqplib, { Options, Channel, Connection } from 'amqplib';
 import { logger } from '../../logger';
 import { BufferConverter } from '../buffer-converter';
-
-export interface RabbitMQConfig {
-  protocol: string;
-  host: string;
-  port: number;
-  username: string;
-  password: string;
-}
+import { RabbitMQConfig } from '../../types';
 
 export abstract class RabbitMQ {
   protected connection!: Connection;

@@ -6,7 +6,7 @@ import { Worker } from './worker';
 import { logger } from './logger';
 import { Bash } from './bash';
 import { AMQPServer } from './amqp';
-import { RabbitMQConfig } from './amqp/vhosts';
+import { RabbitMQConfig } from './types';
 
 export class Application {
   protected readonly bashFlag = '--bash';

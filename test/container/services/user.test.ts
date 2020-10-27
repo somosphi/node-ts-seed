@@ -1,8 +1,8 @@
 import { assert, sinon, expect } from '../../helpers';
 import { UserService } from '../../../src/container/services/user';
-import { User } from '../../../src/container/repositories/user';
 import { ResourceNotFoundError } from '../../../src/errors';
 import { UserSources } from '../../../src/enums';
+import { User } from '../../../src/types';
 
 describe('UserService', () => {
   describe('#all', () => {

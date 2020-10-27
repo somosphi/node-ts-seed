@@ -1,9 +1,10 @@
 import { inject, provide } from 'injection';
-import { UserRepository, User } from '../repositories/user';
+import { UserRepository } from '../repositories/user';
 import { JsonPlaceholderIntegration } from '../integrations/http/json-placeholder';
 import { UserSources } from '../../enums';
 import { ResourceNotFoundError } from '../../errors';
 import { UserProducer } from '../integrations/amqp/producers/user';
+import { User } from '../../types';
 
 @provide()
 export class UserService {

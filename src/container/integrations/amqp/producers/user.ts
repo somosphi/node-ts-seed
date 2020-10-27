@@ -3,13 +3,7 @@ import { Options } from 'amqplib';
 import { Producer } from './producer';
 import { logger } from '../../../../logger';
 import { RabbitMQ } from '../../../../amqp/vhosts';
-
-export interface UserMessage {
-  id: string;
-  name: string;
-  username: string;
-  emailAddress: string;
-}
+import { UserMessage } from '../../../../types';
 
 @provide()
 export class UserProducer implements Producer {
