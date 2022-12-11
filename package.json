@@ -47,7 +47,7 @@
     "cron": "^1.7.2",
     "dotenv": "^8.1.0",
     "elastic-apm-node": "^2.16.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "helmet": "^3.21.0",
     "injection": "^1.7.7",
     "joi": "^14.3.1",
