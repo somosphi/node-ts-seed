@@ -51,7 +51,7 @@
     "helmet": "^3.21.0",
     "injection": "^1.7.7",
     "joi": "^14.3.1",
-    "knex": "^0.19.5",
+    "knex": "^2.4.0",
     "moment-timezone": "^0.5.25",
     "mysql2": "^1.7.0",
     "supertest": "^4.0.2",
